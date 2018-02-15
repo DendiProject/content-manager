@@ -17,7 +17,7 @@ public class NodeVerb  implements Serializable {
     @Id
     @Column(name="node_verb_id")
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long nodeTagId;
+    private String nodeVerbId;
     
     @ManyToOne
     @JoinColumn(name = "verb_id")

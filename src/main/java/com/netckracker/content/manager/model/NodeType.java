@@ -16,19 +16,19 @@ import javax.persistence.*;
 @Table
 public class NodeType implements Serializable {
     @Id   
-    @Column(name = "id_type")
+    @Column(name = "type_id")
     @GeneratedValue(strategy =  GenerationType.AUTO)
-    private long id;
+    private String typeId;
 
-    @Column
+    @Column(name = "type_name")
     private String name;
     
-    public Long getId() {
-        return id;
+    public String getId() {
+        return typeId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setId(String id) {
+        this.typeId = typeId;
     }
     public String getName() {
         return name;

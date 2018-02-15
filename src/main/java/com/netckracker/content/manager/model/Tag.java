@@ -17,12 +17,12 @@ public class Tag implements Serializable {
     @Id   
     @Column(name = "tag_id")
     @GeneratedValue(strategy =  GenerationType.AUTO)
-    private long tagId;
+    private String tagId;
 
-    @Column
+     @Column(name = "tag_name")
     private String name;
     
-    public Long getId() {
+    public String getId() {
         return tagId;
     }
 

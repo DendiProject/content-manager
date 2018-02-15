@@ -13,9 +13,11 @@ import javax.persistence.*;
 public class MetaInformation implements Serializable{
 
     @Id
-    private Long metaInfId;
+    @Column(name = "meta_inf_id")
+    @GeneratedValue(strategy =  GenerationType.AUTO)
+    private String metaInfId;
     
-    @Column
+    @Column(name = "value")   
     private String value;
     
     @ManyToOne
@@ -23,14 +25,14 @@ public class MetaInformation implements Serializable{
     private Node node;
     
     @ManyToOne
-    @JoinColumn(name = "meta_inf_id")
+    @JoinColumn(name = "meta_type_id")
     private MetaInformationType metaInformationType;
 
-    public Long getMetaInfId() {
+    public String getMetaInfId() {
         return metaInfId;
     }
 
-    public void setMetaInfId(Long metaInfId) {
+    public void setMetaInfId(String metaInfId) {
         this.metaInfId = metaInfId;
     }
     

@@ -18,21 +18,21 @@ public class NodeText implements Serializable {
     @Id
     @Column(name="text_id")
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long textId;
+    private String textId;
     
     @ManyToOne
     @JoinColumn(name = "node_id")
     private Node node;
     
-    @Column
+   @Column(name="text")
     private String text;
      
 
-    public Long getTextId() {
+    public String getTextId() {
         return textId;
     }
 
-    public void setTextId(Long textId) {
+    public void setTextId(String textId) {
         this.textId = textId;
     }
     

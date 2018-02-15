@@ -17,12 +17,12 @@ public class Verb  implements Serializable{
     @Id   
     @Column(name = "verb_id")
     @GeneratedValue(strategy =  GenerationType.AUTO)
-    private long verbId;
+    private String verbId;
 
-    @Column
+    @Column(name = "verb_name")
     private String name;
     
-    public Long getId() {
+    public String getId() {
         return verbId;
     }
 

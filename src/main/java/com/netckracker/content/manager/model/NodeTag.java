@@ -18,7 +18,7 @@ public class NodeTag implements Serializable {
     @Id
     @Column(name="node_tag_id")
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long nodeTagId;
+    private String nodeTagId;
     
     @ManyToOne
     @JoinColumn(name = "node_id")

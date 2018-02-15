@@ -17,14 +17,14 @@ import javax.persistence.*;
 @Table
 public class MetaInformationType implements Serializable {
     @Id   
-    @Column(name = "meta_inf_id")
+    @Column(name = "meta_type_id")
     @GeneratedValue(strategy =  GenerationType.AUTO)
-    private long metaInfTypeId;
+    private String metaInfTypeId;
     
-    @Column
+    @Column(name = "meta_type")
     private String typeMeta;       
     
-    public Long getId() {
+    public String getId() {
         return metaInfTypeId;
     }
 

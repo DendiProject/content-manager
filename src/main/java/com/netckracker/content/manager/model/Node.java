@@ -9,8 +9,6 @@ import java.io.Serializable;
 import java.util.Set;
 import javax.persistence.*;
 
-
-
 /**
  *
  * @author eliza
@@ -23,14 +21,14 @@ public class Node implements Serializable {
     @Column(name = "node_id")        
     private String id;
 
-    @Column
+    @Column(name = "node_name")   
     private String name;
 
-    @Column
+    @Column(name = "node_source")   
     private String source;
 
     @ManyToOne
-    @JoinColumn(name = "id_type", nullable = false)
+    @JoinColumn(name = "type_id", nullable = false)
     private NodeType nodeType;
     
 
