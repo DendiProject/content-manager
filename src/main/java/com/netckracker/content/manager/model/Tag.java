@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package com.netckracker.content.manager.model;
+
 import java.io.Serializable;
 import javax.persistence.*;
 
@@ -12,17 +13,17 @@ import javax.persistence.*;
  * @author eliza
  */
 @Entity
-@Table
+@Table(name = "tags")
 public class Tag implements Serializable {
     @Id   
     @Column(name = "tag_id")
     @GeneratedValue(strategy =  GenerationType.AUTO)
-    private String tagId;
+    private long tagId;
 
-     @Column(name = "tag_name")
+    @Column (name = "tag_name")
     private String name;
     
-    public String getId() {
+    public Long getId() {
         return tagId;
     }
 

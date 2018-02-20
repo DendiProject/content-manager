@@ -12,7 +12,7 @@ import javax.persistence.*;
  * @author eliza
  */
 @Entity
-@Table
+@Table (name="node_verbs")
 public class NodeVerb  implements Serializable {
     @Id
     @Column(name="node_verb_id")

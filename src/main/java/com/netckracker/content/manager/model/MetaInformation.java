@@ -9,7 +9,7 @@ package com.netckracker.content.manager.model;
 import javax.persistence.*;
 
 @Entity
-@Table
+@Table(name="meta_information")
 public class MetaInformation implements Serializable{
 
     @Id

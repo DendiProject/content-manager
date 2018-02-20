@@ -14,7 +14,7 @@ import javax.persistence.*;
  * @author eliza
  */
 @Entity
-@Table
+@Table(name = "nodes")   
 public class Node implements Serializable {
 
     @Id   
@@ -24,7 +24,7 @@ public class Node implements Serializable {
     @Column(name = "node_name")   
     private String name;
 
-    @Column(name = "node_source")   
+    @Column(name = "source")   
     private String source;
 
     @ManyToOne

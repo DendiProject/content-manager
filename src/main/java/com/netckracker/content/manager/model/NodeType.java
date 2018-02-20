@@ -13,7 +13,7 @@ import javax.persistence.*;
  * @author eliza
  */
 @Entity
-@Table
+@Table (name = "node_types")
 public class NodeType implements Serializable {
     @Id   
     @Column(name = "type_id")

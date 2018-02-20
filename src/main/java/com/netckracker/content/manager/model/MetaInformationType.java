@@ -14,14 +14,14 @@ import javax.persistence.*;
  * @author eliza
  */
 @Entity
-@Table
+@Table(name = "meta_information_types")
 public class MetaInformationType implements Serializable {
     @Id   
     @Column(name = "meta_type_id")
     @GeneratedValue(strategy =  GenerationType.AUTO)
     private String metaInfTypeId;
     
-    @Column(name = "meta_type")
+    @Column(name = "meta_type_name")
     private String typeMeta;       
     
     public String getId() {
