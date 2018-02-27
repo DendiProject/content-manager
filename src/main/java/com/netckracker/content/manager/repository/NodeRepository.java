@@ -6,6 +6,7 @@
 package com.netckracker.content.manager.repository;
 
 import com.netckracker.content.manager.model.Node;
+import com.netckracker.content.manager.model.NodeType;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -18,8 +19,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface NodeRepository extends JpaRepository <Node, String> {
-  Node findById(String id);  
-  ArrayList<Node> findAll();
-   
+    List<Node> findByNodeType(NodeType type);
+    Node findById(String id);
     
 }

@@ -12,12 +12,12 @@ import javax.persistence.*;
  * @author eliza
  */
 @Entity
-@Table (name="node_text")
+@Table 
 public class NodeText implements Serializable {
 
     @Id
     @Column(name="text_id")
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String textId;
     
     @ManyToOne
@@ -43,5 +43,14 @@ public class NodeText implements Serializable {
         public String getText() {
         return text;
     }
+
+    public void setNode(Node node) {
+        this.node = node;
+    }
+
+    public Node getNode() {
+        return node;
+    }
+    
     
 }

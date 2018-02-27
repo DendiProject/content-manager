@@ -6,6 +6,7 @@
 package com.netckracker.content.manager.service;
 
 import com.netckracker.content.manager.model.Node;
+import com.netckracker.content.manager.model.NodeType;
 import com.netckracker.content.manager.repository.NodeRepository;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,9 +17,9 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 
 public interface NodeService {
-    List<Node> findAll();  
-    List<Node> findById(String id); 
-    public Node addNode(Node node);
-    public Node deleteNode(String id);
+    public List<Node> findAll();  
+    public List<Node> findByType(NodeType type);  
+    public Node findById(String id); 
+    public  String  addNode(Node node);  
    
 }

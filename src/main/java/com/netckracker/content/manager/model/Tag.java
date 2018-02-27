@@ -13,17 +13,17 @@ import javax.persistence.*;
  * @author eliza
  */
 @Entity
-@Table(name = "tags")
+@Table
 public class Tag implements Serializable {
     @Id   
     @Column(name = "tag_id")
-    @GeneratedValue(strategy =  GenerationType.AUTO)
-    private long tagId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private String tagId;
 
     @Column (name = "tag_name")
     private String name;
     
-    public Long getId() {
+    public String getId() {
         return tagId;
     }
 
@@ -37,5 +37,14 @@ public class Tag implements Serializable {
     public void setName(String name) {
         this.name = name;
     }
+
+    public String getTagId() {
+        return tagId;
+    }
+
+    public void setTagId(String tagId) {
+        this.tagId = tagId;
+    }
+    
     
 }

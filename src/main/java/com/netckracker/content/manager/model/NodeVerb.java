@@ -12,11 +12,11 @@ import javax.persistence.*;
  * @author eliza
  */
 @Entity
-@Table (name="node_verbs")
+@Table
 public class NodeVerb  implements Serializable {
     @Id
     @Column(name="node_verb_id")
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String nodeVerbId;
     
     @ManyToOne
@@ -26,5 +26,30 @@ public class NodeVerb  implements Serializable {
     @ManyToOne
     @JoinColumn(name = "node_id")
     private Node node;
+
+    public String getNodeVerbId() {
+        return nodeVerbId;
+    }
+
+    public void setNodeVerbId(String nodeVerbId) {
+        this.nodeVerbId = nodeVerbId;
+    }
+
+    public Verb getVerb() {
+        return verb;
+    }
+
+    public void setVerb(Verb verb) {
+        this.verb = verb;
+    }
+
+    public Node getNode() {
+        return node;
+    }
+
+    public void setNode(Node node) {
+        this.node = node;
+    }
+    
     
 }

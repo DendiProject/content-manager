@@ -5,8 +5,11 @@
  */
 package com.netckracker.content.manager.repository;
 
-import com.netckracker.content.manager.model.MetaInformationType;
-import com.netckracker.content.manager.model.Node;
+import com.netckracker.content.manager.model.NodeTag;
+import com.netckracker.content.manager.model.NodeVerb;
+import com.netckracker.content.manager.model.Tag;
+import com.netckracker.content.manager.model.Verb;
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -15,6 +18,7 @@ import org.springframework.stereotype.Repository;
  * @author eliza
  */
 @Repository
-public interface MetaInformationTypeRepository extends JpaRepository <MetaInformationType, String>{
+public interface NodeVerbRepository extends JpaRepository <NodeVerb, String>{
+    List<NodeVerb> findByVerb(Verb verb);  
     
 }

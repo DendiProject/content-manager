@@ -15,5 +15,5 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface VerbRepository   extends JpaRepository <Verb, String> {
-    
+    Verb findByVerbId(String verbId);
 }

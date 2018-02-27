@@ -27,7 +27,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
  *
  * @author eliza
  */
-@Configuration
+/*@Configuration
 @EnableTransactionManagement 
 @EnableJpaRepositories(basePackages = "com.netckracker.content.manager.repository")
 @PropertySource("classpath:application.properties")
@@ -86,3 +86,4 @@ public class JpaConfig {
   }
 }
 
+*/

@@ -9,12 +9,12 @@ package com.netckracker.content.manager.model;
 import javax.persistence.*;
 
 @Entity
-@Table(name="meta_information")
+@Table
 public class MetaInformation implements Serializable{
 
     @Id
     @Column(name = "meta_inf_id")
-    @GeneratedValue(strategy =  GenerationType.AUTO)
+     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String metaInfId;
     
     @Column(name = "value")   
@@ -32,16 +32,34 @@ public class MetaInformation implements Serializable{
         return metaInfId;
     }
 
-    public void setMetaInfId(String metaInfId) {
-        this.metaInfId = metaInfId;
-    }
-    
     public String getValue() {
         return value;
     }
-    
-        public void setValue(String value) {
+
+    public Node getNode() {
+        return node;
+    }
+
+    public MetaInformationType getMetaInformationType() {
+        return metaInformationType;
+    }
+
+    public void setMetaInfId(String metaInfId) {
+        this.metaInfId = metaInfId;
+    }
+
+    public void setValue(String value) {
         this.value = value;
     }
+
+    public void setNode(Node node) {
+        this.node = node;
+    }
+
+    public void setMetaInformationType(MetaInformationType metaInformationType) {
+        this.metaInformationType = metaInformationType;
+    }
+
+
     
 }

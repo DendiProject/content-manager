@@ -13,6 +13,8 @@ import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.google.common.collect.Lists;
+import com.netckracker.content.manager.model.NodeTag;
+import com.netckracker.content.manager.model.NodeType;
 
 
 /**
@@ -20,8 +22,6 @@ import com.google.common.collect.Lists;
  * @author eliza
  */
 @Service
-@Repository
-@Transactional
 public class NodeServiceImpl implements NodeService{
     @Autowired
     private NodeRepository nodeRepository;
@@ -32,23 +32,23 @@ public class NodeServiceImpl implements NodeService{
     }
 
     @Override
-    public List<Node> findById(String id) {
-        return Lists.newArrayList(nodeRepository.findById(id));
+    public Node findById(String id) {
+        return  nodeRepository.findById(id);
     }
-    @Transactional
+    
     @Override
-    public Node addNode(Node node) {
-        Node savedNode=nodeRepository.saveAndFlush(node);
-        return node;
+    @Transactional    
+    public String addNode(Node node) {
+        Node savedNode=nodeRepository.save(node);        
+        return savedNode.getId();
     } 
 
     @Override
-    public Node deleteNode(String id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public List<Node> findByType(NodeType type) {
+        return Lists.newArrayList(nodeRepository.findByNodeType(type));
     }
 
-
-    
+     
     
     
 }

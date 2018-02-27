@@ -13,23 +13,24 @@ import javax.persistence.*;
  * @author eliza
  */
 @Entity
-@Table (name = "node_types")
+@Table 
 public class NodeType implements Serializable {
     @Id   
     @Column(name = "type_id")
-    @GeneratedValue(strategy =  GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String typeId;
 
     @Column(name = "type_name")
     private String name;
-    
-    public String getId() {
+
+    public String getTypeId() {
         return typeId;
     }
 
-    public void setId(String id) {
+    public void setTypeId(String typeId) {
         this.typeId = typeId;
     }
+
     public String getName() {
         return name;
     }
@@ -37,5 +38,7 @@ public class NodeType implements Serializable {
     public void setName(String name) {
         this.name = name;
     }
+    
+
 
 }

@@ -6,6 +6,9 @@
 package com.netckracker.content.manager.repository;
 
 import com.netckracker.content.manager.model.MetaInformation;
+import com.netckracker.content.manager.model.MetaInformationType;
+import com.netckracker.content.manager.model.Node;
+import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -16,5 +19,7 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface MetaInformationRepository extends JpaRepository <MetaInformation, String> {
+    List<MetaInformation> findByMetaInformationTypeAndValue(MetaInformationType metaType, String value);
+    MetaInformation findByNode(Node node);
     
 }

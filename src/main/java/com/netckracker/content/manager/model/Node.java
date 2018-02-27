@@ -7,6 +7,7 @@ package com.netckracker.content.manager.model;
 
 import java.io.Serializable;
 import java.util.Set;
+import java.util.logging.Logger;
 import javax.persistence.*;
 
 /**
@@ -14,11 +15,12 @@ import javax.persistence.*;
  * @author eliza
  */
 @Entity
-@Table(name = "nodes")   
+@Table
 public class Node implements Serializable {
 
     @Id   
-    @Column(name = "node_id")        
+    @Column(name = "node_id") 
+     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
 
     @Column(name = "node_name")   
@@ -30,30 +32,42 @@ public class Node implements Serializable {
     @ManyToOne
     @JoinColumn(name = "type_id", nullable = false)
     private NodeType nodeType;
-    
 
     public String getId() {
         return id;
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
     public String getName() {
         return name;
+    }
+
+    public String getSource() {
+        return source;
+    }
+
+    public NodeType getNodeType() {
+        return nodeType;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public void setName(String name) {
         this.name = name;
     }
-    public String getSource() {
-        return source;
-    }
 
     public void setSource(String source) {
         this.source = source;
-    } 
+    }
 
+    public void setNodeType(NodeType nodeType) {
+        this.nodeType = nodeType;
+    }
+
+    
+
+    
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;

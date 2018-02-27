@@ -12,11 +12,11 @@ import javax.persistence.*;
  * @author eliza
  */
 @Entity
-@Table(name = "verbs")
+@Table
 public class Verb  implements Serializable{
     @Id   
     @Column(name = "verb_id")
-    @GeneratedValue(strategy =  GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String verbId;
 
     @Column(name = "verb_name")
@@ -26,7 +26,7 @@ public class Verb  implements Serializable{
         return verbId;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.verbId = verbId;
     }
     public String getName() {
