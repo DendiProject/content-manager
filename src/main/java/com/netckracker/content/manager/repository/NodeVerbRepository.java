@@ -10,6 +10,7 @@ import com.netckracker.content.manager.model.NodeVerb;
 import com.netckracker.content.manager.model.Tag;
 import com.netckracker.content.manager.model.Verb;
 import java.util.List;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -19,6 +20,6 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface NodeVerbRepository extends JpaRepository <NodeVerb, String>{
-    List<NodeVerb> findByVerb(Verb verb);  
+    List<NodeVerb> findByVerb(Verb verb, Pageable pageable);  
     
 }

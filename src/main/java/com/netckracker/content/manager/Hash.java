@@ -5,8 +5,20 @@
  */
 package com.netckracker.content.manager;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import org.apache.commons.codec.digest.DigestUtils;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.zip.CRC32;
+import java.util.zip.Checksum;
+
 //import org.springframework.util.DigestUtils;
 
 /**
@@ -15,9 +27,12 @@ import org.apache.commons.codec.digest.DigestUtils;
  */
 public class Hash {
     
-    public static String getHash(byte[] array)    {
-        String hash=DigestUtils.sha1Hex(array);        
-        return hash;       
-    }
+    public String getChecksum(byte[] fileInArray) {
+        Checksum checksum = new CRC32();
+        checksum.update(fileInArray,0,fileInArray.length);
+        long lngChecksum = checksum.getValue();     
+        String sum = Long.toString(lngChecksum);
+        return sum;        
+    }    
     
 }

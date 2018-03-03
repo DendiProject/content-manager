@@ -5,11 +5,8 @@
  */
 package com.netckracker.content.manager.service;
 
-import com.netckracker.content.manager.model.Node;
-import com.netckracker.content.manager.model.NodeType;
-import com.netckracker.content.manager.repository.NodeRepository;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 
 /**
  *
@@ -17,9 +14,17 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 
 public interface NodeService {
-    public List<Node> findAll();  
-    public List<Node> findByType(NodeType type);  
-    public Node findById(String id); 
-    public  String  addNode(Node node);  
+    //public String findByType(String nameType);  
+    public List<String> findByVerb(String nameVerb, int page, int size); 
+    public List<String> findByTag(String nameTag,  int page, int size);
+    public byte[] findById(String id); 
+    public  String  addNode(byte[] array, String typeName); 
+    public  void  deleteNode(String id); 
+    public void addVerb(String nodeId, String verbName);
+    public void addTag(String nodeId, String tagName);
+    public List<String> findVerbByLetters(String letters);
+    public List<String> findTagByLetters(String letters);
+    
+    
    
 }

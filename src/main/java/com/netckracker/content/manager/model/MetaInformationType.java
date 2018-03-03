@@ -8,6 +8,7 @@ package com.netckracker.content.manager.model;
 import java.io.Serializable;
 import java.util.Set;
 import javax.persistence.*;
+import org.hibernate.annotations.GenericGenerator;
 
 /**
  *
@@ -18,7 +19,8 @@ import javax.persistence.*;
 public class MetaInformationType implements Serializable {
     @Id   
     @Column(name = "meta_type_id")
-     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(generator = "uuid")
+    @GenericGenerator(name = "uuid", strategy = "uuid2")
     private String metaInfTypeId;
     
     @Column(name = "meta_type_name")

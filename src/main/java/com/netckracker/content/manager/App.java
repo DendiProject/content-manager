@@ -8,6 +8,7 @@ import com.netckracker.content.manager.service.NodeService;
 import com.netckracker.content.manager.service.NodeServiceImpl;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -29,12 +30,9 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 public class App 
 {
     
-    public static void main( String[] args ) 
+    public static void main( String[] args ) throws FileNotFoundException, IOException 
     {        
-	SpringApplication.run(App.class, args);     
-   
-
-                     
+	SpringApplication.run(App.class, args);                        
     }
    
 }

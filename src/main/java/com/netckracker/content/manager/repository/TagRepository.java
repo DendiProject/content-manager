@@ -7,6 +7,7 @@ package com.netckracker.content.manager.repository;
 
 
 import com.netckracker.content.manager.model.Tag;
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -16,6 +17,8 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface TagRepository extends JpaRepository <Tag, String> {
-    Tag findByTagId(String tagId);           
+    Tag findByTagId(String tagId);
+    Tag findByName(String tagName);
+    List<Tag> findFirst10ByNameLike(String firstLetters);
     
 }

@@ -7,6 +7,7 @@ package com.netckracker.content.manager.model;
 
 import java.io.Serializable;
 import javax.persistence.*;
+import org.hibernate.annotations.GenericGenerator;
 /**
  *
  * @author eliza
@@ -17,7 +18,8 @@ public class NodeTag implements Serializable {
     
     @Id
     @Column(name="node_tag_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(generator = "uuid")
+    @GenericGenerator(name = "uuid", strategy = "uuid2")
     private String nodeTagId;
     
     @ManyToOne

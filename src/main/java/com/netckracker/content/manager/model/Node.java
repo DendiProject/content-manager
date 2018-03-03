@@ -9,6 +9,7 @@ import java.io.Serializable;
 import java.util.Set;
 import java.util.logging.Logger;
 import javax.persistence.*;
+import org.hibernate.annotations.GenericGenerator;
 
 /**
  *
@@ -16,11 +17,12 @@ import javax.persistence.*;
  */
 @Entity
 @Table
-public class Node implements Serializable {
+public class Node implements Serializable {    
 
     @Id   
     @Column(name = "node_id") 
-     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(generator = "uuid")
+    @GenericGenerator(name = "uuid", strategy = "uuid2")
     private String id;
 
     @Column(name = "node_name")   

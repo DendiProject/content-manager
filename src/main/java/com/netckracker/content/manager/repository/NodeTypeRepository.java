@@ -5,10 +5,8 @@
  */
 package com.netckracker.content.manager.repository;
 
-import com.netckracker.content.manager.model.NodeTag;
-import com.netckracker.content.manager.model.Tag;
-import java.util.List;
-import org.springframework.data.domain.Pageable;
+import com.netckracker.content.manager.model.NodeText;
+import com.netckracker.content.manager.model.NodeType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -17,6 +15,7 @@ import org.springframework.stereotype.Repository;
  * @author eliza
  */
 @Repository
-public interface NodeTagRepository extends JpaRepository <NodeTag, String>  {
-    List<NodeTag> findByTag(Tag tag,  Pageable pageable);    
+public interface NodeTypeRepository  extends JpaRepository <NodeType, String>  {
+    NodeType findByTypeId(String id);
+    
 }

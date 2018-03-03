@@ -7,6 +7,7 @@ package com.netckracker.content.manager.model;
 
 import java.io.Serializable;
 import javax.persistence.*;
+import org.hibernate.annotations.GenericGenerator;
 /**
  *
  * @author eliza
@@ -16,7 +17,8 @@ import javax.persistence.*;
 public class Verb  implements Serializable{
     @Id   
     @Column(name = "verb_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(generator = "uuid")
+    @GenericGenerator(name = "uuid", strategy = "uuid2")
     private String verbId;
 
     @Column(name = "verb_name")
