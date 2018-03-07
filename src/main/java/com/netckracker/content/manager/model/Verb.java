@@ -6,6 +6,7 @@
 package com.netckracker.content.manager.model;
 
 import java.io.Serializable;
+import java.util.Set;
 import javax.persistence.*;
 import org.hibernate.annotations.GenericGenerator;
 /**
@@ -24,6 +25,12 @@ public class Verb  implements Serializable{
     @Column(name = "verb_name")
     private String name;
     
+    @ManyToOne
+    @JoinColumn(name = "node_id", nullable = false)
+    private Node node;
+    
+    
+    
     public String getId() {
         return verbId;
     }
@@ -37,6 +44,22 @@ public class Verb  implements Serializable{
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getVerbId() {
+        return verbId;
+    }
+
+    public void setVerbId(String verbId) {
+        this.verbId = verbId;
+    }
+
+    public Node getNode() {
+        return node;
+    }
+
+    public void setNode(Node node) {
+        this.node = node;
     }
     
 }

@@ -5,32 +5,31 @@
  */
 package com.netckracker.content.manager.service;
 
+
+import com.netckracker.content.manager.convertor.Convertor;
 import com.netckracker.content.manager.model.Node;
 import com.netckracker.content.manager.repository.NodeRepository;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.google.common.collect.Lists;
-import com.netckracker.content.manager.model.NodeTag;
-import com.netckracker.content.manager.model.NodeType;
-import com.netckracker.content.manager.model.NodeVerb;
 import com.netckracker.content.manager.model.Tag;
+import com.netckracker.content.manager.model.TagDto;
 import com.netckracker.content.manager.model.Verb;
-import com.netckracker.content.manager.repository.NodeTagRepository;
-import com.netckracker.content.manager.repository.NodeVerbRepository;
+import com.netckracker.content.manager.model.VerbDto;
+import com.netckracker.content.manager.repository.NodeTypeRepository;
 import com.netckracker.content.manager.repository.TagRepository;
 import com.netckracker.content.manager.repository.VerbRepository;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.springframework.data.domain.Example;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+
 
 
 /**
@@ -42,54 +41,74 @@ public class NodeServiceImpl implements NodeService{
     @Autowired
     private NodeRepository nodeRepository;    
     @Autowired
-    private VerbRepository verbRepository;
-    @Autowired
-    private NodeVerbRepository nodeVerbRepository;
+    private VerbRepository verbRepository;    
     @Autowired
     private TagRepository tagRepository;
     @Autowired
-    private NodeTagRepository nodeTagRepository;
+    private NodeTypeRepository nodeTypeRepository;
+    @Autowired
+    private Convertor convertor;
+    final static String IMAGE_RESOURCE_PATH = "/filestorage/";
+
 
 
     @Transactional
     @Override
-    public String addNode(byte[] array, String typeName) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public synchronized String addNode(byte[] array, String typeName, boolean userResources, int size) {  
+
+        
+       throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Transactional
     @Override
-    public void deleteNode(String id) {
+    public void deleteNode(String id) {        
         Node node=nodeRepository.findById(id);
-        nodeRepository.delete(node); 
+        String hash=node.getCheckSum();        
+        String fileName=node.getName()+"."+node.getNodeType().getName();
+        nodeRepository.delete(node);
+        if (nodeRepository.findByCheckSum(hash)==null)
+            {
+                File f=new File(IMAGE_RESOURCE_PATH+fileName);
+                f.delete();
+            }
     }
 
     @Override
     public byte[] findById(String id) {
         byte[] array = null;
+        File f=new File(nodeRepository.findById(id).getNodeSource());
+        FileInputStream fin;
         try {
-          array=Files.readAllBytes(Paths.get(nodeRepository.findById(id).getSource()));
-          String type=nodeRepository.findById(id).getNodeType().getName();
+            fin = new FileInputStream(f);
+            fin.read(array);
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(NodeServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
             Logger.getLogger(NodeServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        }      
         return array;
     }
 
     @Transactional
     @Override
     public void addVerb(String nodeId, String verbName) {
-        Verb verb=new Verb();
-        verb=verbRepository.findByName(verbName);
-        if (verb==null)
+        if (nodeRepository.findById(nodeId).getUserId()==null)
         {
-            Verb newVerb=new Verb();
-            newVerb.setName(verbName);
-            Verb saved=verbRepository.save(newVerb);
-            NodeVerb nodeVerb=new NodeVerb();
-            nodeVerb.setNode(nodeRepository.findById(nodeId));
-            nodeVerb.setVerb(saved);
-            NodeVerb savedNodeVerb=nodeVerbRepository.save(nodeVerb);
+            Verb verb=new Verb();
+            verb=verbRepository.findByName(verbName);
+            if (verb==null)
+            {
+                Verb newVerb=new Verb();
+                newVerb.setName(verbName);
+                Verb saved=verbRepository.save(newVerb);
+                Node node=nodeRepository.findById(nodeId);
+                node.getVerbList().add(saved);
+            }
+            else {
+                Node node=nodeRepository.findById(nodeId);
+                node.getVerbList().add(verb);
+            }
         }
         
     }
@@ -97,74 +116,59 @@ public class NodeServiceImpl implements NodeService{
     @Transactional
     @Override
     public void addTag(String nodeId, String tagName) {
-        Tag tag=new Tag();
-        tag=tagRepository.findByName(tagName);
-        if (tag==null)
+        if (nodeRepository.findById(nodeId).getUserId()==null)
         {
-            Tag newTag=new Tag();
-            newTag.setName(tagName);
-            Tag saved=tagRepository.save(newTag);
-            NodeTag nodeTag=new NodeTag();
-            nodeTag.setNode(nodeRepository.findById(nodeId));
-            nodeTag.setTag(saved);
-            NodeTag savedNodeTag=nodeTagRepository.save(nodeTag);
-        }
+            Tag tag=new Tag();
+            tag=tagRepository.findByName(tagName);
+            if (tag==null)
+            {
+                Tag newTag=new Tag();
+                newTag.setName(tagName);
+                Tag saved=tagRepository.save(newTag);
+                Node node=nodeRepository.findById(nodeId);
+                node.getTagList().add(saved);           
+            }
+            else {
+                Node node=nodeRepository.findById(nodeId);
+                node.getTagList().add(tag);
+            }
+        }      
     }   
 
     @Override
-    public List<String> findByVerb(String nameVerb,   int page, int size) {
-        Verb verb=verbRepository.findByName(nameVerb);
-        List<String> nodesId=new ArrayList<>();
-        Pageable pageable = new PageRequest(page, size);
-        Iterator iter =nodeVerbRepository.findByVerb(verb, pageable).iterator();
-        while (iter.hasNext())
-                {
-                    NodeVerb nodeVerb = (NodeVerb) iter.next();
-                    nodesId.add(nodeVerb.getNode().getId());
-                }
-        
-       return nodesId;
+    public List<String> findByVerb(String nameVerb,  int page, int size) {
+        Verb verb=new Verb();
+        verb.setName(nameVerb);
+        Example  example = Example.of(verb);        
+        List <Verb> verbs= verbRepository.findAll(example, new PageRequest(page, size)).getContent();
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+     
     }
 
     @Override
     public List<String> findByTag(String nameTag,  int page, int size) {
-        Tag tag=tagRepository.findByName(nameTag);
-        List<String> nodesId=new ArrayList<>();
-        Pageable pageable = new PageRequest(page, size);
-        Iterator iter =nodeTagRepository.findByTag(tag, pageable).iterator();
-        while (iter.hasNext())
-                {
-                    NodeTag nodeTag = (NodeTag) iter.next();
-                    nodesId.add(nodeTag.getNode().getId());
-                }
-        
-       return nodesId;
+       Tag tag=new Tag();
+       tag.setName(nameTag);
+       Example  example = Example.of(tag); 
+       List <Tag> tags= tagRepository.findAll(example, new PageRequest(page, size)).getContent();
+       
+       throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+
     }
 
     @Override
-    public List<String> findVerbByLetters(String letters) {        
+    public List<VerbDto> findVerbByLetters(String letters) {        
         List<String> verbs=new ArrayList<>();   
-        
-        Iterator iter =verbRepository.findFirst10ByNameLike(letters).iterator();
-        while (iter.hasNext())
-                {
-                    Verb verb = (Verb) iter.next();
-                    verbs.add(verb.getName());
-                }
-        return verbs;
+        List <Verb> listVerbs=verbRepository.findFirst10ByNameLike(letters);
+        return convertor.convertVerbToDto(listVerbs);
+       
     }
 
     @Override
-    public List<String> findTagByLetters(String letters) {
-        List<String> tags=new ArrayList<>();   
-        
-        Iterator iter =tagRepository.findFirst10ByNameLike(letters).iterator();
-        while (iter.hasNext())
-                {
-                    Tag tag = (Tag) iter.next();
-                    tags.add(tag.getName());
-                }
-        return tags;
+    public List<TagDto> findTagByLetters(String letters) {
+        List<String> tags=new ArrayList<>();           
+        List <Tag> listTags=tagRepository.findFirst10ByNameLike(letters);
+        return convertor.convertTagToDto(listTags);
     }
    
 }

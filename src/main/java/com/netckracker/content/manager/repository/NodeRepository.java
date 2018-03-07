@@ -7,8 +7,11 @@ package com.netckracker.content.manager.repository;
 
 import com.netckracker.content.manager.model.Node;
 import com.netckracker.content.manager.model.NodeType;
+import com.netckracker.content.manager.model.Tag;
+import com.netckracker.content.manager.model.Verb;
 import java.util.ArrayList;
 import java.util.List;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -21,5 +24,9 @@ import org.springframework.stereotype.Repository;
 public interface NodeRepository extends JpaRepository <Node, String> {
     List<Node> findByNodeType(NodeType type);
     Node findById(String id);
+    List<Node> findByCheckSum(String checkSum);
+    //List<Node> findAll( );
+    //List<Node> findByVerb(Verb verb, Pageable pageable );
+    
     
 }

@@ -3,7 +3,6 @@ spring:
     database: H2
     show-sql: true
     hibernate:
-      ddl-auto: create
       dialect: org.hibernate.dialect.H2Dialect
       format_sql: true
       naming:

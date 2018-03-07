@@ -19,16 +19,16 @@ public class MetaInformation implements Serializable{
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     private String metaInfId;
     
-    @Column(name = "value")   
-    private String value;
+    @Column(name = "meta_inf_type")
+    private String metaInformationType;
+    
+    @Column(name = "meta_value")   
+    private String value;    
     
     @ManyToOne
-    @JoinColumn(name = "node_id")
+    @JoinColumn(name = "node_id", nullable = false)
     private Node node;
     
-    @ManyToOne
-    @JoinColumn(name = "meta_type_id")
-    private MetaInformationType metaInformationType;
 
     public String getMetaInfId() {
         return metaInfId;
@@ -38,11 +38,8 @@ public class MetaInformation implements Serializable{
         return value;
     }
 
-    public Node getNode() {
-        return node;
-    }
-
-    public MetaInformationType getMetaInformationType() {
+    
+    public String getMetaInformationType() {
         return metaInformationType;
     }
 
@@ -54,11 +51,7 @@ public class MetaInformation implements Serializable{
         this.value = value;
     }
 
-    public void setNode(Node node) {
-        this.node = node;
-    }
-
-    public void setMetaInformationType(MetaInformationType metaInformationType) {
+    public void setMetaInformationType(String metaInformationType) {
         this.metaInformationType = metaInformationType;
     }
 

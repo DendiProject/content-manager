@@ -9,6 +9,11 @@ import com.netckracker.content.manager.model.Node;
 import com.netckracker.content.manager.model.NodeType;
 import com.netckracker.content.manager.repository.NodeRepository;
 import com.netckracker.content.manager.repository.NodeTypeRepository;
+import com.netckracker.content.manager.service.NodeServiceImpl;
+import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
 import static org.junit.Assert.assertEquals;
@@ -34,6 +39,9 @@ public class InmemoryDbTest {
     @Autowired
     private NodeTypeRepository nodeTypeRepository;
     
+        @Autowired
+    private NodeServiceImpl nodeServiceImpl;
+    
     private static final String NAME="image";
     
     @Test
@@ -45,5 +53,18 @@ public class InmemoryDbTest {
         
         assertEquals("name correct", NAME, saved.getName());        
     }   
-  
+    
+   /* @Test
+    public void test() throws IOException{
+    
+    byte [] array;
+        String path="E:/travis.txt";
+        path=URLEncoder.encode(path, "UTF-8"); 
+        array = Files.readAllBytes(Paths.get(path));
+        //System.out.println(getFilesDir());
+        System.out.println(array);
+        String typeName="";
+        String s=nodeServiceImpl.addNode(array, typeName, true);
+}
+  */
 }

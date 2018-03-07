@@ -17,5 +17,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface NodeTypeRepository  extends JpaRepository <NodeType, String>  {
     NodeType findByTypeId(String id);
+    NodeType findByName(String name);
+    
     
 }

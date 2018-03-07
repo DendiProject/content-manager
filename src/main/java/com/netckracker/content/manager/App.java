@@ -1,38 +1,35 @@
 package com.netckracker.content.manager;
 
-
-
-import com.netckracker.content.manager.model.Node;
-import com.netckracker.content.manager.repository.NodeRepository;
-import com.netckracker.content.manager.service.NodeService;
-import com.netckracker.content.manager.service.NodeServiceImpl;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.List;
+import org.modelmapper.Converter;
+import org.modelmapper.ModelMapper;
+import org.modelmapper.spi.MappingContext;
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.scheduling.annotation.EnableScheduling;
-//import org.springframework.test.context.ContextConfiguration;
 
 /**
  * Hello world!
  *
  */
-
+@ComponentScan({"com.netckracker.content.manager"})
 @SpringBootApplication
 public class App 
 {
+final static String IMAGE_RESOURCE_PATH = "/filestorage/";
     
     public static void main( String[] args ) throws FileNotFoundException, IOException 
     {        
-	SpringApplication.run(App.class, args);                        
+	SpringApplication.run(App.class, args); 
+
     }
+    @Bean
+    public ModelMapper modelMapper() {
+      return new ModelMapper();
+    }
+ 
    
 }

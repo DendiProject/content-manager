@@ -6,6 +6,7 @@
 package com.netckracker.content.manager.model;
 
 import java.io.Serializable;
+import java.util.Set;
 import javax.persistence.*;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -24,6 +25,10 @@ public class Tag implements Serializable {
 
     @Column (name = "tag_name")
     private String name;
+    
+    @ManyToOne
+    @JoinColumn(name = "node_id", nullable = false)
+    private Node node;
     
     public String getId() {
         return tagId;
@@ -46,6 +51,14 @@ public class Tag implements Serializable {
 
     public void setTagId(String tagId) {
         this.tagId = tagId;
+    }
+
+    public Node getNode() {
+        return node;
+    }
+
+    public void setNode(Node node) {
+        this.node = node;
     }
     
     

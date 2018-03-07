@@ -7,7 +7,6 @@ package com.netckracker.content.manager.model;
 
 import java.io.Serializable;
 import java.util.Set;
-import java.util.logging.Logger;
 import javax.persistence.*;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -28,12 +27,53 @@ public class Node implements Serializable {
     @Column(name = "node_name")   
     private String name;
 
-    @Column(name = "source")   
-    private String source;
+    @Column(name = "node_source")   
+    private String nodeSource;
+    
+    @Column(name = "check_sum")   
+    private String checkSum;
 
+    @Column(name = "user_id")   
+    private String userId;
+    
     @ManyToOne
     @JoinColumn(name = "type_id", nullable = false)
     private NodeType nodeType;
+    
+    
+    @OneToMany(mappedBy="node")
+    Set <MetaInformation> metaList;
+    
+    @OneToMany(mappedBy="node")
+    Set <Tag> tagList; 
+    
+    @OneToMany(mappedBy="node")
+    Set <Verb> verbList; 
+
+    public String getNodeSource() {
+        return nodeSource;
+    }
+
+    public void setNodeSource(String nodeSource) {
+        this.nodeSource = nodeSource;
+    }    
+    
+    public String getCheckSum() {
+        return checkSum;
+    }
+
+    public void setCheckSum(String checkSum) {
+        this.checkSum = checkSum;
+    }
+
+   
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
 
     public String getId() {
         return id;
@@ -41,10 +81,6 @@ public class Node implements Serializable {
 
     public String getName() {
         return name;
-    }
-
-    public String getSource() {
-        return source;
     }
 
     public NodeType getNodeType() {
@@ -59,35 +95,32 @@ public class Node implements Serializable {
         this.name = name;
     }
 
-    public void setSource(String source) {
-        this.source = source;
-    }
-
     public void setNodeType(NodeType nodeType) {
         this.nodeType = nodeType;
     }
 
-    
-
-    
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
-        Node that=(Node) obj;
-        if (id != that.id) return false;
-        if (name != null ? !name.equals(that.name) : that.name!= null) return false;
-        if (source != null ? !source.equals(that.source) : that.name!= null) return false;
-        
-        return true;
+    public Set<MetaInformation> getMetaList() {
+        return metaList;
     }
-     
-    @Override
-	public int hashCode() {
-        int result = 1;
-        result = 31 * result + (name != null ? name.hashCode() : 0);
-        result = 31 * result + (source != null ? source.hashCode() : 0);
-        return result;
+
+    public void setMetaList(Set<MetaInformation> metaList) {
+        this.metaList = metaList;
+    }
+
+    public Set<Tag> getTagList() {
+        return tagList;
+    }
+
+    public void setTagList(Set<Tag> tagList) {
+        this.tagList = tagList;
+    }
+
+    public Set<Verb> getVerbList() {
+        return verbList;
+    }
+
+    public void setVerbList(Set<Verb> verbList) {
+        this.verbList = verbList;
     }
     
 }
