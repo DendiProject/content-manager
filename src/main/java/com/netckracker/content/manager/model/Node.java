@@ -8,6 +8,8 @@ package com.netckracker.content.manager.model;
 import java.io.Serializable;
 import java.util.Set;
 import javax.persistence.*;
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.hibernate.annotations.GenericGenerator;
 
 /**
@@ -38,16 +40,15 @@ public class Node implements Serializable {
     
     @ManyToOne
     @JoinColumn(name = "type_id", nullable = false)
-    private NodeType nodeType;
+    private NodeType nodeType;    
     
-    
-    @OneToMany(mappedBy="node")
+    @OneToMany
     Set <MetaInformation> metaList;
     
-    @OneToMany(mappedBy="node")
+    @OneToMany
     Set <Tag> tagList; 
     
-    @OneToMany(mappedBy="node")
+    @OneToMany
     Set <Verb> verbList; 
 
     public String getNodeSource() {
@@ -121,6 +122,22 @@ public class Node implements Serializable {
 
     public void setVerbList(Set<Verb> verbList) {
         this.verbList = verbList;
+    }
+    
+    @Override
+    public int hashCode() {
+        int result=1;
+        result = 31 * result + (checkSum != null ? checkSum.hashCode() : 0);
+        return result;
+    }
+    
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if ( !(obj instanceof Node) ) return false;
+        final Node node = (Node) obj;
+        if ( !node.getCheckSum().equals( getCheckSum() ) ) return false;
+        return true;
     }
     
 }

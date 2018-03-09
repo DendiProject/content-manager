@@ -24,11 +24,7 @@ public class Verb  implements Serializable{
 
     @Column(name = "verb_name")
     private String name;
-    
-    @ManyToOne
-    @JoinColumn(name = "node_id", nullable = false)
-    private Node node;
-    
+       
     
     
     public String getId() {
@@ -53,13 +49,19 @@ public class Verb  implements Serializable{
     public void setVerbId(String verbId) {
         this.verbId = verbId;
     }
-
-    public Node getNode() {
-        return node;
-    }
-
-    public void setNode(Node node) {
-        this.node = node;
+    @Override
+    public int hashCode() {
+        int result=1;
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        return result;
     }
     
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if ( !(obj instanceof Tag) ) return false;
+        final Verb verb = (Verb) obj;
+        if ( !verb.getName().equals(getName())) return false;
+        return true;
+    }
 }

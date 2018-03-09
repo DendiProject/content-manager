@@ -25,9 +25,7 @@ public class MetaInformation implements Serializable{
     @Column(name = "meta_value")   
     private String value;    
     
-    @ManyToOne
-    @JoinColumn(name = "node_id", nullable = false)
-    private Node node;
+
     
 
     public String getMetaInfId() {

@@ -28,9 +28,7 @@ CREATE TABLE metainformation
     node_id character varying(255) NOT NULL,
     CONSTRAINT metainformation_pkey PRIMARY KEY (meta_inf_id)
 );
-ALTER TABLE metainformation
-    ADD FOREIGN KEY (node_id) 
-    REFERENCES node (node_id);
+
 
 CREATE TABLE tag
 (
@@ -39,9 +37,6 @@ CREATE TABLE tag
     node_id character varying(255) ,
     CONSTRAINT tag_pkey PRIMARY KEY (tag_id)
 );
-ALTER TABLE tag
-    ADD FOREIGN KEY (node_id)
-    REFERENCES node (node_id); 
 
 CREATE TABLE verb
 (
@@ -50,9 +45,7 @@ CREATE TABLE verb
     node_id character varying(255) ,
     CONSTRAINT verb_pkey PRIMARY KEY (verb_id)
 );
-ALTER TABLE verb
-    ADD FOREIGN KEY (node_id)
-    REFERENCES node (node_id); 
+
 
 CREATE TABLE nodetext
 (

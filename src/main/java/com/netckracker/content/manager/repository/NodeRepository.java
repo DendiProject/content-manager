@@ -11,8 +11,10 @@ import com.netckracker.content.manager.model.Tag;
 import com.netckracker.content.manager.model.Verb;
 import java.util.ArrayList;
 import java.util.List;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -25,8 +27,16 @@ public interface NodeRepository extends JpaRepository <Node, String> {
     List<Node> findByNodeType(NodeType type);
     Node findById(String id);
     List<Node> findByCheckSum(String checkSum);
-    //List<Node> findAll( );
-    //List<Node> findByVerb(Verb verb, Pageable pageable );
+
+    @Query(value = "SELECT * FROM NODE n JOIN TAG t ON n.TAG_ID=t.TAG_ID WHERE n.TAG_ID = ?1 ORDER BY ?#{#pageable}\"",
+            countQuery = "SELECT count(*) FROM NODE n JOIN TAG t ON n.TAG_ID=t.TAG_ID WHERE n.TAG_ID = ? ORDER BY ?#{#pageable}\"",
+            nativeQuery = true)
+    Page<Node> findByTag(String tagId,  Pageable pageable);
     
+    @Query(value = "SELECT * FROM NODE n JOIN VERB v ON n.VERB_ID=v.VERB_ID WHERE n.VERB_ID = ?1 ORDER BY ?#{#pageable}\"",
+            countQuery = "SELECT count(*) FROM NODE n JOIN VERB v ON n.VERB_ID=v.VERB_ID WHERE n.VERB_ID = ?1 ORDER BY ?#{#pageable}\"",
+            nativeQuery = true)
+    Page<Node> findByVerb(String tagId, Pageable pageable);
+
     
 }

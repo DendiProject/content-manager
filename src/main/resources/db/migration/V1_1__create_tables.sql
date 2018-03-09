@@ -33,11 +33,7 @@ CREATE TABLE metainformation
     meta_inf_type character varying(255),
     meta_value character varying(255),    
     node_id character varying(255)  NOT NULL,
-    CONSTRAINT metainformation_pkey PRIMARY KEY (meta_inf_id),
-    CONSTRAINT node_id FOREIGN KEY (node_id)
-            REFERENCES node (node_id) MATCH SIMPLE
-            ON UPDATE NO ACTION
-            ON DELETE NO ACTION
+    CONSTRAINT metainformation_pkey PRIMARY KEY (meta_inf_id)
 )
 WITH (
     OIDS = FALSE
@@ -47,12 +43,7 @@ CREATE TABLE tag
 (
     tag_id character varying(255) NOT NULL,
     tag_name character varying(255),
-    CONSTRAINT tag_pkey PRIMARY KEY (tag_id),
-    CONSTRAINT node_id FOREIGN KEY (node_id)
-        REFERENCES node (node_id) MATCH SIMPLE
-        ON UPDATE NO ACTION
-        ON DELETE NO ACTION
-)
+    CONSTRAINT tag_pkey PRIMARY KEY (tag_id))
 WITH (
     OIDS = FALSE
 );
@@ -61,11 +52,7 @@ CREATE TABLE verb
 (
     verb_id character varying(255) NOT NULL,
     verb_name character varying(255) ,
-    CONSTRAINT verb_pkey PRIMARY KEY (verb_id),
-    CONSTRAINT node_id FOREIGN KEY (node_id)
-        REFERENCES node (node_id) MATCH SIMPLE
-        ON UPDATE NO ACTION
-        ON DELETE NO ACTION
+    CONSTRAINT verb_pkey PRIMARY KEY (verb_id)
 )
 WITH (
     OIDS = FALSE

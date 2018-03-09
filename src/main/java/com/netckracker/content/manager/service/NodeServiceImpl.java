@@ -8,6 +8,7 @@ package com.netckracker.content.manager.service;
 
 import com.netckracker.content.manager.convertor.Convertor;
 import com.netckracker.content.manager.model.Node;
+import com.netckracker.content.manager.model.NodeDto;
 import com.netckracker.content.manager.repository.NodeRepository;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -136,39 +137,26 @@ public class NodeServiceImpl implements NodeService{
     }   
 
     @Override
-    public List<String> findByVerb(String nameVerb,  int page, int size) {
-        Verb verb=new Verb();
-        verb.setName(nameVerb);
-        Example  example = Example.of(verb);        
-        List <Verb> verbs= verbRepository.findAll(example, new PageRequest(page, size)).getContent();
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-     
+    public List<NodeDto> findByVerb(String nameVerb,  int page, int size) {
+        Verb verb=verbRepository.findByName(nameVerb);
+        return convertor.convertToDto(nodeRepository.findByVerb(verb.getId(),new PageRequest(page, size)).getContent());     
     }
 
     @Override
-    public List<String> findByTag(String nameTag,  int page, int size) {
-       Tag tag=new Tag();
-       tag.setName(nameTag);
-       Example  example = Example.of(tag); 
-       List <Tag> tags= tagRepository.findAll(example, new PageRequest(page, size)).getContent();
-       
-       throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-
+    public List<NodeDto> findByTag(String nameTag,  int page, int size) {
+       Tag tag=tagRepository.findByName(nameTag);       
+       return convertor.convertToDto(nodeRepository.findByTag(tag.getId(),new PageRequest(page, size)).getContent());
     }
 
     @Override
     public List<VerbDto> findVerbByLetters(String letters) {        
-        List<String> verbs=new ArrayList<>();   
-        List <Verb> listVerbs=verbRepository.findFirst10ByNameLike(letters);
-        return convertor.convertVerbToDto(listVerbs);
+        return convertor.convertVerbToDto(verbRepository.findFirst10ByNameLike(letters));
        
     }
 
     @Override
     public List<TagDto> findTagByLetters(String letters) {
-        List<String> tags=new ArrayList<>();           
-        List <Tag> listTags=tagRepository.findFirst10ByNameLike(letters);
-        return convertor.convertTagToDto(listTags);
+        return convertor.convertTagToDto(tagRepository.findFirst10ByNameLike(letters));
     }
    
 }

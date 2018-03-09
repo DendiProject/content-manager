@@ -25,10 +25,7 @@ public class Tag implements Serializable {
 
     @Column (name = "tag_name")
     private String name;
-    
-    @ManyToOne
-    @JoinColumn(name = "node_id", nullable = false)
-    private Node node;
+
     
     public String getId() {
         return tagId;
@@ -52,14 +49,20 @@ public class Tag implements Serializable {
     public void setTagId(String tagId) {
         this.tagId = tagId;
     }
-
-    public Node getNode() {
-        return node;
-    }
-
-    public void setNode(Node node) {
-        this.node = node;
+    
+    @Override
+    public int hashCode() {
+       int result=1;
+        result = 31 * result + (name!= null ? name.hashCode() : 0);
+        return result;
     }
     
-    
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if ( !(obj instanceof Tag) ) return false;
+        final Tag tag = (Tag) obj;
+        if ( !tag.getName().equals(getName())) return false;
+        return true;
+    }
 }
