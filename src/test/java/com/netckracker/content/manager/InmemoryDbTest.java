@@ -33,14 +33,10 @@ import org.springframework.test.context.support.AnnotationConfigContextLoader;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest
-//@TestPropertySource(locations = {"classpath:application-test.yml"})
 @Transactional
 public class InmemoryDbTest {
     @Autowired
     private NodeTypeRepository nodeTypeRepository;
-    
-        @Autowired
-    private NodeServiceImpl nodeServiceImpl;
     
     private static final String NAME="image";
     
@@ -53,18 +49,5 @@ public class InmemoryDbTest {
         
         assertEquals("name correct", NAME, saved.getName());        
     }   
-    
-   /* @Test
-    public void test() throws IOException{
-    
-    byte [] array;
-        String path="E:/travis.txt";
-        path=URLEncoder.encode(path, "UTF-8"); 
-        array = Files.readAllBytes(Paths.get(path));
-        //System.out.println(getFilesDir());
-        System.out.println(array);
-        String typeName="";
-        String s=nodeServiceImpl.addNode(array, typeName, true);
-}
-  */
+   
 }

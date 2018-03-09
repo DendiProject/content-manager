@@ -12,6 +12,7 @@ import com.netckracker.content.manager.model.TagDto;
 import com.netckracker.content.manager.model.Verb;
 import com.netckracker.content.manager.model.VerbDto;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
@@ -30,7 +31,8 @@ private ModelMapper modelMapper;
 
     public List<NodeDto> convertToDto(List <Node> nodes){        
         Type listType = new TypeToken<List <Node>>() {}.getType();
-        List<NodeDto> nodeDto = modelMapper.map(nodes, listType);
+        List<NodeDto> nodeDto = new ArrayList<>();
+        nodeDto=modelMapper.map(nodes, listType);
         return nodeDto;
     }
     

@@ -6,6 +6,7 @@
 package com.netckracker.content.manager.model;
 
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.*;
 import org.apache.commons.lang.builder.EqualsBuilder;
@@ -39,18 +40,26 @@ public class Node implements Serializable {
     private String userId;
     
     @ManyToOne
-    @JoinColumn(name = "type_id", nullable = false)
+    @JoinColumn(name = "type_id")
     private NodeType nodeType;    
     
-    @OneToMany
+    @OneToMany( fetch = FetchType.LAZY)
+    @Column(name="meta_inf_id", nullable=false)
     Set <MetaInformation> metaList;
     
-    @OneToMany
+    @OneToMany( fetch = FetchType.LAZY)
+    @Column(name="tag_id", nullable=false)
     Set <Tag> tagList; 
     
-    @OneToMany
+    @OneToMany( fetch = FetchType.LAZY)
+    @Column(name="verb_id", nullable=false)
     Set <Verb> verbList; 
 
+    public Node() {
+        tagList=new HashSet<>();
+    }
+
+    
     public String getNodeSource() {
         return nodeSource;
     }
@@ -111,6 +120,8 @@ public class Node implements Serializable {
     public Set<Tag> getTagList() {
         return tagList;
     }
+
+    
 
     public void setTagList(Set<Tag> tagList) {
         this.tagList = tagList;

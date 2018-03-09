@@ -26,6 +26,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.springframework.data.domain.Example;
@@ -125,13 +127,16 @@ public class NodeServiceImpl implements NodeService{
             {
                 Tag newTag=new Tag();
                 newTag.setName(tagName);
-                Tag saved=tagRepository.save(newTag);
+                tagRepository.save(newTag);
+                Tag saved=tagRepository.findByName(tagName);
                 Node node=nodeRepository.findById(nodeId);
-                node.getTagList().add(saved);           
+                node.getTagList().add(saved);                 
+                nodeRepository.save(node);
             }
             else {
                 Node node=nodeRepository.findById(nodeId);
                 node.getTagList().add(tag);
+                nodeRepository.save(node);
             }
         }      
     }   
@@ -139,13 +144,20 @@ public class NodeServiceImpl implements NodeService{
     @Override
     public List<NodeDto> findByVerb(String nameVerb,  int page, int size) {
         Verb verb=verbRepository.findByName(nameVerb);
-        return convertor.convertToDto(nodeRepository.findByVerb(verb.getId(),new PageRequest(page, size)).getContent());     
+        
+        
+        List <NodeDto> nodesDto=new ArrayList<NodeDto>();
+        //nodesDto=
+        return null;    
     }
 
     @Override
     public List<NodeDto> findByTag(String nameTag,  int page, int size) {
-       Tag tag=tagRepository.findByName(nameTag);       
-       return convertor.convertToDto(nodeRepository.findByTag(tag.getId(),new PageRequest(page, size)).getContent());
+       Tag tag=tagRepository.findByName(nameTag);     
+       List <Node> nodes=new ArrayList<Node>();
+       //nodes=nodeRepository.findByVerb(tag.getId(),new PageRequest(page, size)).getContent();
+       nodes=nodeRepository.findByTag();
+       return convertor.convertToDto(nodes);
     }
 
     @Override
