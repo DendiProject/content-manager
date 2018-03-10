@@ -12,8 +12,11 @@ import com.netckracker.content.manager.model.TagDto;
 import com.netckracker.content.manager.model.Verb;
 import com.netckracker.content.manager.model.VerbDto;
 import java.lang.reflect.Type;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import static jdk.nashorn.internal.objects.NativeDebug.map;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,22 +32,17 @@ public class Convertor {
 @Autowired
 private ModelMapper modelMapper;
 
-    public List<NodeDto> convertToDto(List <Node> nodes){        
-        Type listType = new TypeToken<List <Node>>() {}.getType();
-        List<NodeDto> nodeDto = new ArrayList<>();
-        nodeDto=modelMapper.map(nodes, listType);
-        return nodeDto;
+    public NodeDto convertNodeToDto(Node node) {
+    NodeDto nodeDto = modelMapper.map(node, NodeDto.class);
+    return nodeDto;        
     }
-    
-    public List<VerbDto> convertVerbToDto(List <Verb> verbs){        
-        Type listType = new TypeToken<List <Verb>>() {}.getType();
-        List<VerbDto> verbDto = modelMapper.map(verbs, listType);
-        return verbDto;
+    public TagDto convertTagToDto (Tag tag){
+    TagDto tagDto = modelMapper.map(tag, TagDto.class);
+    return tagDto;        
     }
-    
-    public List<TagDto> convertTagToDto(List <Tag> tags){        
-     Type listType = new TypeToken<List <Tag>>() {}.getType();
-     List<TagDto> verbDto = modelMapper.map(tags, listType);
-     return verbDto;
-    } 
+    public VerbDto convertVerbToDto (Verb verb){
+    VerbDto verbDto = modelMapper.map(verb, VerbDto.class);
+    return verbDto;        
+    }
+            
 }

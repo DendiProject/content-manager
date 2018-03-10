@@ -28,22 +28,24 @@ public interface NodeRepository extends JpaRepository <Node, String> {
     List<Node> findByNodeType(NodeType type);
     Node findById(String id);
     List<Node> findByCheckSum(String checkSum);
-
-
-   /* @Query(value = "SELECT * FROM NODE n JOIN TAG t ON n.TAG_ID=t.TAG_ID WHERE n.TAG_ID = ?1",
-            countQuery = "SELECT count(*) FROM NODE n JOIN TAG t ON n.TAG_ID=t.TAG_ID WHERE n.TAG_ID = ? ORDER BY ?#{#pageable}\"",
-            nativeQuery = true)
-    Page<Node> findByTag(String tagId, Pageable pageable);
     
-    @Query(value = "SELECT * FROM NODE n JOIN VERB v ON n.VERB_ID=v.VERB_ID WHERE n.VERB_ID = ?1 ORDER BY ?#{#pageable}\"",
-            countQuery = "SELECT count(*) FROM NODE n JOIN VERB v ON n.VERB_ID=v.VERB_ID WHERE n.VERB_ID = ?1 ORDER BY ?#{#pageable}\"",
-            nativeQuery = true)
-    Page<Node> findByVerb(String tagId, Pageable pageable);*/
+    @Query(value = "select n.* from Node n Where n.node_id in"
+        + "(Select t.Node_node_id from Node_tagList t where n.node_id=t.Node_node_id and t.tagList_tag_id=:tagid)"
+        + "ORDER BY n.node_id --#pageable\n",            
+         countQuery = "select count(*) from Node n Where n.node_id in"
+        + "(Select t.Node_node_id from Node_tagList t where n.node_id=t.Node_node_id and t.tagList_tag_id=:tagid)"
+        + "ORDER BY n.node_id --#pageable\n",
+        nativeQuery = true)
+    Page<Node> findByTag(@Param("tagid") String tagId, Pageable pageable);
     
-    @Query(value = "select * from Node n ",   
-            nativeQuery = true)
-    List<Node> findByTag();
-    
+    @Query(value = "select n.* from Node n Where n.node_id in"
+        + "(Select v.Node_node_id from Node_verbList v where n.node_id=v.Node_node_id and v.verbList_verb_id=:verbid)"
+        + "ORDER BY n.node_id --#pageable\n",            
+         countQuery = "select count(*) from Node n Where n.node_id in"
+        + "(Select v.Node_node_id from Node_verbList v where n.node_id=v.Node_node_id and v.verbList_verb_id=:verbid)"
+        + "ORDER BY n.node_id --#pageable\n", 
+        nativeQuery = true)
+    Page<Node> findByVerb(@Param("verbid") String verbId, Pageable pageable);
     
     
 }

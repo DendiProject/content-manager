@@ -30,6 +30,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.PageRequest;
 
@@ -112,10 +113,9 @@ public class NodeServiceImpl implements NodeService{
                 Node node=nodeRepository.findById(nodeId);
                 node.getVerbList().add(verb);
             }
-        }
-        
+        }        
     }
-
+    
     @Transactional
     @Override
     public void addTag(String nodeId, String tagName) {
@@ -144,31 +144,41 @@ public class NodeServiceImpl implements NodeService{
     @Override
     public List<NodeDto> findByVerb(String nameVerb,  int page, int size) {
         Verb verb=verbRepository.findByName(nameVerb);
-        
-        
-        List <NodeDto> nodesDto=new ArrayList<NodeDto>();
-        //nodesDto=
-        return null;    
+        List <Node> nodes=new ArrayList<Node>();    
+       nodes=nodeRepository.findByVerb(verb.getId(), new PageRequest(page, size)).getContent();
+       return nodes.stream()
+               .map(node->convertor.convertNodeToDto(node))
+               .collect(Collectors.toList());   
     }
 
     @Override
     public List<NodeDto> findByTag(String nameTag,  int page, int size) {
        Tag tag=tagRepository.findByName(nameTag);     
-       List <Node> nodes=new ArrayList<Node>();
-       //nodes=nodeRepository.findByVerb(tag.getId(),new PageRequest(page, size)).getContent();
-       nodes=nodeRepository.findByTag();
-       return convertor.convertToDto(nodes);
+       List <Node> nodes=new ArrayList<Node>();    
+       nodes=nodeRepository.findByTag(tag.getId(), new PageRequest(page, size)).getContent();
+       return nodes.stream()
+               .map(node->convertor.convertNodeToDto(node))
+               .collect(Collectors.toList());
+
     }
 
     @Override
-    public List<VerbDto> findVerbByLetters(String letters) {        
-        return convertor.convertVerbToDto(verbRepository.findFirst10ByNameLike(letters));
+    public List<VerbDto> findVerbByLetters(String letters) {    
+        List <Verb> verbs=new ArrayList<Verb>(); 
+        verbs=verbRepository.findFirst10ByNameLike(letters);
+        return verbs.stream()
+               .map(verb->convertor.convertVerbToDto(verb))
+               .collect(Collectors.toList());
        
     }
 
     @Override
     public List<TagDto> findTagByLetters(String letters) {
-        return convertor.convertTagToDto(tagRepository.findFirst10ByNameLike(letters));
+       List <Tag> tags=new ArrayList<Tag>(); 
+        tags=tagRepository.findFirst10ByNameContaining(letters);
+        return tags.stream()
+               .map(tag->convertor.convertTagToDto(tag))
+               .collect(Collectors.toList());
     }
    
 }

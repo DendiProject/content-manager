@@ -19,7 +19,7 @@ import org.springframework.stereotype.Repository;
 public interface TagRepository extends JpaRepository <Tag, String> {
     Tag findByTagId(String tagId);
     Tag findByName(String tagName);
-    List<Tag> findFirst10ByNameLike(String firstLetters);
+    List<Tag> findFirst10ByNameContaining(String firstLetters);
      
     
 }

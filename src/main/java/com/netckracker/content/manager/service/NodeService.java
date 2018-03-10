@@ -5,6 +5,7 @@
  */
 package com.netckracker.content.manager.service;
 
+import com.netckracker.content.manager.model.Node;
 import com.netckracker.content.manager.model.NodeDto;
 import com.netckracker.content.manager.model.TagDto;
 import com.netckracker.content.manager.model.VerbDto;

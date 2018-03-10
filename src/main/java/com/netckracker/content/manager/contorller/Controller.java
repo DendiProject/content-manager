@@ -6,6 +6,7 @@
 package com.netckracker.content.manager.contorller;
 
 import com.netckracker.content.manager.model.Node;
+import com.netckracker.content.manager.model.NodeDto;
 import com.netckracker.content.manager.service.NodeService;
 import com.netckracker.content.manager.service.NodeServiceImpl;
 import java.io.File;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  *
@@ -33,6 +35,41 @@ public class Controller {
     @Autowired
     private NodeServiceImpl nodeService;        
      
+    @RequestMapping(value = "/tag/addtag", method = RequestMethod.POST)
+    public ResponseEntity<Void> addTag(@RequestBody  String nodeId,@RequestBody  String tagName){
+        nodeService.addTag(nodeId, tagName);       
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
     
+    @RequestMapping(value = "/verb/addverb", method = RequestMethod.POST)
+    public ResponseEntity<Void> addVerb(@RequestBody  String nodeId,@RequestBody  String verbName){
+        nodeService.addVerb(nodeId, verbName);       
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
    
+    @RequestMapping(value = "/tag/{name}", method = RequestMethod.GET)
+    public ResponseEntity<List<NodeDto>> getNodeByTag(
+        @RequestParam(required = true, value = "name") String name) {
+        
+        List<NodeDto> nodes=nodeService.findByTag(name, 0, 0);
+        if (nodes == null){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        else{            
+            return new ResponseEntity<>(nodes, HttpStatus.OK);
+        }        
+    }
+    
+        @RequestMapping(value = "/verb/{name}", method = RequestMethod.GET)
+    public ResponseEntity<List<NodeDto>> getNodeByVer(
+         @RequestParam(required = true, value = "name")String name) {
+        
+        List<NodeDto> nodes=nodeService.findByVerb(name, 0, 0);
+        if (nodes == null){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        else{            
+            return new ResponseEntity<>(nodes, HttpStatus.OK);
+        }        
+    }
 }

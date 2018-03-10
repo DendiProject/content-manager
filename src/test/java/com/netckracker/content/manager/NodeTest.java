@@ -9,6 +9,7 @@ import com.netckracker.content.manager.model.Node;
 import com.netckracker.content.manager.model.NodeDto;
 import com.netckracker.content.manager.model.NodeType;
 import com.netckracker.content.manager.model.Tag;
+import com.netckracker.content.manager.model.TagDto;
 import com.netckracker.content.manager.repository.NodeRepository;
 import com.netckracker.content.manager.repository.TagRepository;
 import com.netckracker.content.manager.service.NodeService;
@@ -43,25 +44,25 @@ public class NodeTest {
     public void addTagTest(){
         Node node=new Node();
         node.setName("111");
-        Node saved=nodeRepository.save(node);
-        System.out.println(saved.getId());
+        Node saved=nodeRepository.save(node);       
         nodeService.addTag(saved.getId(), NAME);
         Tag tag=tagRepository.findByName(NAME);
         assertEquals("name incorrect", NAME, tag.getName());  
-         List<NodeDto>  nodes=nodeService.findByTag(tag.getId(), 0, 1);
+        List<NodeDto>  nodes=nodeService.findByTag(NAME, 0, 1);
+        assertEquals("id incorrect",  saved.getId(), nodes.get(0).getId());  
+         
     }
-    
-    
     @Test
-    public void findNodeByTagTest(){
-        new ArrayList<NodeDto>();   
-         Tag tag=new Tag();
-         tag=tagRepository.findByName(NAME);        
-       
-        //System.out.println(nodes.get(0).getId());
-        //String nodeId=nodes.
-        //assertEquals("name incorrect", "111", )
-    }   
-    
-    
+    public void findTags(){
+        Tag tag1=new Tag();
+        tag1.setName("tag1");
+        Tag tag2=new Tag();
+        tag2.setName("tag2");
+        tagRepository.save(tag1);
+        tagRepository.save(tag2);
+        List<TagDto> tags=nodeService.findTagByLetters("tag");
+        assertEquals("tag incorrect", "tag1", tags.get(0).getName());
+        assertEquals("tag incorrect", "tag2", tags.get(1).getName());
+
+    }
 }
