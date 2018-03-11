@@ -1,7 +1,9 @@
 package com.netckracker.content.manager;
 
+import com.netckracker.content.manager.resource.Resource;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.concurrent.LinkedBlockingQueue;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.boot.SpringApplication;
@@ -17,7 +19,6 @@ import org.springframework.context.annotation.ComponentScan;
 @SpringBootApplication
 public class App 
 {
-final static String IMAGE_RESOURCE_PATH = "/filestorage/";
     
     public static void main( String[] args ) throws FileNotFoundException, IOException 
     {        
@@ -27,10 +28,13 @@ final static String IMAGE_RESOURCE_PATH = "/filestorage/";
     @Bean
     public ModelMapper modelMapper() {
         ModelMapper modelMapper=new ModelMapper();
-        modelMapper.getConfiguration()
-  .setMatchingStrategy(MatchingStrategies.LOOSE);
-      return modelMapper;
+      return  new ModelMapper();
     }
+    @Bean
+    public LinkedBlockingQueue<Resource> blockingQueue() {
+        return  new LinkedBlockingQueue<>();
+    }
+            
  
    
 }

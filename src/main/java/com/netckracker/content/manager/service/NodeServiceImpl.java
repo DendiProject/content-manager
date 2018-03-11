@@ -18,20 +18,21 @@ import com.netckracker.content.manager.model.Tag;
 import com.netckracker.content.manager.model.TagDto;
 import com.netckracker.content.manager.model.Verb;
 import com.netckracker.content.manager.model.VerbDto;
+import com.netckracker.content.manager.queue.Producer;
 import com.netckracker.content.manager.repository.NodeTypeRepository;
 import com.netckracker.content.manager.repository.TagRepository;
 import com.netckracker.content.manager.repository.VerbRepository;
+import com.netckracker.content.manager.resource.Resource;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
-import org.springframework.data.domain.Example;
 import org.springframework.data.domain.PageRequest;
 
 
@@ -54,15 +55,21 @@ public class NodeServiceImpl implements NodeService{
     private Convertor convertor;
     final static String IMAGE_RESOURCE_PATH = "/filestorage/";
 
+    private List<Resource> resources=new ArrayList<>();
 
+    public List<Resource> getResources() {
+        return resources;
+    }    
 
     @Transactional
     @Override
-    public synchronized String addNode(byte[] array, String typeName, boolean userResources, int size) {  
-
+    public  String addNode(Resource resource) {  
+       // BlockingQueue<byte[]> queue = new ArrayBlockingQueue<>(10);
+       // Producer p=new Producer(queue);
         
        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+    
 
     @Transactional
     @Override
@@ -99,8 +106,7 @@ public class NodeServiceImpl implements NodeService{
     public void addVerb(String nodeId, String verbName) {
         if (nodeRepository.findById(nodeId).getUserId()==null)
         {
-            Verb verb=new Verb();
-            verb=verbRepository.findByName(verbName);
+            Verb verb=verbRepository.findByName(verbName);
             if (verb==null)
             {
                 Verb newVerb=new Verb();
@@ -121,8 +127,7 @@ public class NodeServiceImpl implements NodeService{
     public void addTag(String nodeId, String tagName) {
         if (nodeRepository.findById(nodeId).getUserId()==null)
         {
-            Tag tag=new Tag();
-            tag=tagRepository.findByName(tagName);
+            Tag tag=tagRepository.findByName(tagName);
             if (tag==null)
             {
                 Tag newTag=new Tag();
@@ -144,7 +149,7 @@ public class NodeServiceImpl implements NodeService{
     @Override
     public List<NodeDto> findByVerb(String nameVerb,  int page, int size) {
         Verb verb=verbRepository.findByName(nameVerb);
-        List <Node> nodes=new ArrayList<Node>();    
+        List <Node> nodes=new ArrayList<>();    
        nodes=nodeRepository.findByVerb(verb.getId(), new PageRequest(page, size)).getContent();
        return nodes.stream()
                .map(node->convertor.convertNodeToDto(node))
@@ -154,7 +159,7 @@ public class NodeServiceImpl implements NodeService{
     @Override
     public List<NodeDto> findByTag(String nameTag,  int page, int size) {
        Tag tag=tagRepository.findByName(nameTag);     
-       List <Node> nodes=new ArrayList<Node>();    
+       List <Node> nodes=new ArrayList<>();    
        nodes=nodeRepository.findByTag(tag.getId(), new PageRequest(page, size)).getContent();
        return nodes.stream()
                .map(node->convertor.convertNodeToDto(node))
@@ -164,7 +169,7 @@ public class NodeServiceImpl implements NodeService{
 
     @Override
     public List<VerbDto> findVerbByLetters(String letters) {    
-        List <Verb> verbs=new ArrayList<Verb>(); 
+        List <Verb> verbs=new ArrayList<>(); 
         verbs=verbRepository.findFirst10ByNameLike(letters);
         return verbs.stream()
                .map(verb->convertor.convertVerbToDto(verb))
@@ -174,7 +179,7 @@ public class NodeServiceImpl implements NodeService{
 
     @Override
     public List<TagDto> findTagByLetters(String letters) {
-       List <Tag> tags=new ArrayList<Tag>(); 
+       List <Tag> tags=new ArrayList<>(); 
         tags=tagRepository.findFirst10ByNameContaining(letters);
         return tags.stream()
                .map(tag->convertor.convertTagToDto(tag))

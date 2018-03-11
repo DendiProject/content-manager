@@ -9,6 +9,7 @@ import com.netckracker.content.manager.model.Node;
 import com.netckracker.content.manager.model.NodeDto;
 import com.netckracker.content.manager.model.TagDto;
 import com.netckracker.content.manager.model.VerbDto;
+import com.netckracker.content.manager.resource.Resource;
 import java.util.List;
 import org.springframework.data.domain.Pageable;
 
@@ -22,7 +23,7 @@ public interface NodeService {
     public List<NodeDto> findByVerb(String nameVerb, int page, int size); 
     public List<NodeDto> findByTag(String nameTag,  int page, int size);
     public byte[] findById(String id); 
-    public  String  addNode(byte[] array, String typeName,  boolean userResources, int size); 
+    public  String  addNode(Resource resource); 
     public  void  deleteNode(String id); 
     public void addVerb(String nodeId, String verbName);
     public void addTag(String nodeId, String tagName);
