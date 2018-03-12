@@ -23,10 +23,7 @@ public class MetaInformation implements Serializable{
     private String metaInformationType;
     
     @Column(name = "meta_value")   
-    private String value;    
-    
-
-    
+    private String value;       
 
     public String getMetaInfId() {
         return metaInfId;

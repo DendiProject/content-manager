@@ -18,7 +18,7 @@ import com.netckracker.content.manager.model.Tag;
 import com.netckracker.content.manager.model.TagDto;
 import com.netckracker.content.manager.model.Verb;
 import com.netckracker.content.manager.model.VerbDto;
-import com.netckracker.content.manager.queue.Producer;
+
 import com.netckracker.content.manager.repository.NodeTypeRepository;
 import com.netckracker.content.manager.repository.TagRepository;
 import com.netckracker.content.manager.repository.VerbRepository;
@@ -30,6 +30,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -55,19 +56,23 @@ public class NodeServiceImpl implements NodeService{
     private Convertor convertor;
     final static String IMAGE_RESOURCE_PATH = "/filestorage/";
 
-    private List<Resource> resources=new ArrayList<>();
-
-    public List<Resource> getResources() {
-        return resources;
-    }    
+     @Autowired
+     private LinkedBlockingQueue<Resource> blockingQueue; 
 
     @Transactional
     @Override
-    public  String addNode(Resource resource) {  
-       // BlockingQueue<byte[]> queue = new ArrayBlockingQueue<>(10);
-       // Producer p=new Producer(queue);
-        
-       throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public  String addNode() {  
+       
+        try {
+            
+            Resource rec=blockingQueue.take();
+            System.out.println(rec.getType());
+        } catch (InterruptedException ex) {
+            Logger.getLogger(NodeServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+     
+      // throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
 

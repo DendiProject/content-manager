@@ -22,6 +22,38 @@ public class Resource {
         this.userId = userId;
         this.size = size;
     }
+
+    public byte[] getArray() {
+        return array;
+    }
+
+    public void setArray(byte[] array) {
+        this.array = array;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public int getSize() {
+        return size;
+    }
+
+    public void setSize(int size) {
+        this.size = size;
+    }
  
     
 }

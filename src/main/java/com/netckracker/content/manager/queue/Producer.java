@@ -23,20 +23,15 @@ public class Producer  implements Runnable{
     @Autowired
     private NodeServiceImpl nodeService;
     
-    Producer(BlockingQueue queue) { 
+   public Producer(BlockingQueue queue) { 
         this.queue = queue; 
     }
-    
-    public void start() {   
-   Thread thread = new Thread();
-   thread.start();
 
-   }
 
     @Override
     public void run() {
        // consumer.addNode();
-       List<Resource> resources=nodeService.getResources();
+      /* List<Resource> resources=nodeService.getResources();
        for (Resource resource: resources )
        {
            try {
@@ -44,6 +39,8 @@ public class Producer  implements Runnable{
            } catch (InterruptedException ex) {
                Logger.getLogger(Producer.class.getName()).log(Level.SEVERE, null, ex);
            }
-       }
+       }*/
     }   
+
+  
 }

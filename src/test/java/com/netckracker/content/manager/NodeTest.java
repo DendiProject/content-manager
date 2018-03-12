@@ -5,17 +5,22 @@
  */
 package com.netckracker.content.manager;
 
+import com.netckracker.content.manager.contorller.Controller;
 import com.netckracker.content.manager.model.Node;
 import com.netckracker.content.manager.model.NodeDto;
 import com.netckracker.content.manager.model.NodeType;
 import com.netckracker.content.manager.model.Tag;
 import com.netckracker.content.manager.model.TagDto;
+
 import com.netckracker.content.manager.repository.NodeRepository;
 import com.netckracker.content.manager.repository.TagRepository;
+import com.netckracker.content.manager.resource.Resource;
 import com.netckracker.content.manager.service.NodeService;
 import com.netckracker.content.manager.service.NodeServiceImpl;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 import javax.transaction.Transactional;
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
@@ -32,6 +37,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @SpringBootTest
 @Transactional
 public class NodeTest {
+    @Autowired
+    private Controller controller;
     @Autowired
     private NodeServiceImpl nodeService;
     @Autowired
@@ -65,4 +72,11 @@ public class NodeTest {
         assertEquals("tag incorrect", "tag2", tags.get(1).getName());
 
     }
+    @Test 
+    public void addNodeTest() throws InterruptedException {
+        byte[] array=null;
+       controller.addNode(array, "image");
+       
+    }
+            
 }

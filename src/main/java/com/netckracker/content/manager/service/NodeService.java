@@ -23,7 +23,7 @@ public interface NodeService {
     public List<NodeDto> findByVerb(String nameVerb, int page, int size); 
     public List<NodeDto> findByTag(String nameTag,  int page, int size);
     public byte[] findById(String id); 
-    public  String  addNode(Resource resource); 
+    public  String  addNode(); 
     public  void  deleteNode(String id); 
     public void addVerb(String nodeId, String verbName);
     public void addTag(String nodeId, String tagName);

@@ -98,17 +98,6 @@
          <version>2.6</version>
          <type>jar</type>
       </dependency>
-            <dependency>
-         <groupId> com.google.guava</groupId>
-         <artifactId>guava</artifactId>
-         <version>24.0-jre</version>
-      </dependency>
-      <dependency>
-         <groupId>javax</groupId>
-         <artifactId>javaee-web-api</artifactId>
-         <version>7.0</version>
-         <type>jar</type>
-      </dependency>
    </dependencies>
    <build>
       <plugins>

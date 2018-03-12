@@ -22,16 +22,11 @@ public class Consumer implements Runnable{
     private NodeServiceImpl nodeService;
 
     
-     private final LinkedBlockingQueue<Resource> queue;
+     private final BlockingQueue<Resource> queue;
     
-    Consumer(LinkedBlockingQueue queue) { 
+   public Consumer(BlockingQueue queue) { 
         this.queue = queue; 
     }
- 
-    public void start() {   
-   Thread thread = new Thread();
-   thread.start();
-   }
 
     @Override
     public void run() {
@@ -40,7 +35,7 @@ public class Consumer implements Runnable{
             
             try {
                Resource resource=queue.take();
-               String nodeId= nodeService.addNode(resource);
+              // String nodeId= nodeService.addNode(resource);
                 
             } catch (InterruptedException ex) {
                 Logger.getLogger(Consumer.class.getName()).log(Level.SEVERE, null, ex);

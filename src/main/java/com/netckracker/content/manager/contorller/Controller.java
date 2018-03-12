@@ -5,25 +5,15 @@
  */
 package com.netckracker.content.manager.contorller;
 
-import com.netckracker.content.manager.model.Node;
 import com.netckracker.content.manager.model.NodeDto;
-import com.netckracker.content.manager.queue.Consumer;
-import com.netckracker.content.manager.queue.Producer;
+
 import com.netckracker.content.manager.resource.Resource;
-import com.netckracker.content.manager.service.NodeService;
 import com.netckracker.content.manager.service.NodeServiceImpl;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.List;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -38,7 +28,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class Controller {
     
     @Autowired
-    private NodeServiceImpl nodeService;        
+    private NodeServiceImpl nodeService;      
+     @Autowired
+     private LinkedBlockingQueue<Resource> blockingQueue;
      
     @RequestMapping(value = "/tag/addtag", method = RequestMethod.POST)
     public ResponseEntity<Void> addTag(@RequestBody  String nodeId,@RequestBody  String tagName){
@@ -80,9 +72,11 @@ public class Controller {
         }        
     }
     @RequestMapping(value = "/node/addnode", method = RequestMethod.POST)
-    public ResponseEntity<NodeDto> addVerb(@RequestBody  byte array[], String type){
+    public ResponseEntity<NodeDto> addNode(@RequestBody  byte array[], String type) throws InterruptedException{
         Resource resource=new Resource(array, type, null, 0);
-        nodeService.getResources().add(resource);
+       // nodeService.getResources().add(resource);
+        blockingQueue.put(resource);
+        nodeService.addNode();
         NodeDto node=new NodeDto();
        // nodeService.addNode(array, type, type, 0);
         return new ResponseEntity<>(node, HttpStatus.OK);

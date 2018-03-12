@@ -44,12 +44,14 @@ public class Node implements Serializable {
     private NodeType nodeType;    
     
     @OneToMany( fetch = FetchType.LAZY)
+    @Column(name="tags", nullable=false)
+    Set <Tag> tagList; 
+        
+    @OneToMany( fetch = FetchType.LAZY)
     @Column(name="meta_inf", nullable=false)
     Set <MetaInformation> metaList;
     
-    @OneToMany( fetch = FetchType.LAZY)
-    @Column(name="tags", nullable=false)
-    Set <Tag> tagList; 
+
     
     @OneToMany( fetch = FetchType.LAZY)
     @Column(name="verbs", nullable=false)
