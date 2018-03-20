@@ -7,6 +7,7 @@ package com.netckracker.content.manager;
 
 import java.util.zip.CRC32;
 import java.util.zip.Checksum;
+import org.springframework.stereotype.Component;
 
 //import org.springframework.util.DigestUtils;
 
@@ -14,6 +15,7 @@ import java.util.zip.Checksum;
  *
  * @author eliza
  */
+@Component
 public class Hash {
     
     public String getChecksum(byte[] fileInArray) {

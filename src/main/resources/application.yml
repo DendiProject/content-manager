@@ -1,6 +1,5 @@
 server:
   port: 8082
-
 spring:
   jpa:    
     show-sql: true
@@ -19,3 +18,12 @@ flyway:
   schemas:
     - public
   metaDataTableName: schema_version
+spring.rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+http:
+    multipart:
+    max-file-size: 5MB
+    max-request-size: 5MB

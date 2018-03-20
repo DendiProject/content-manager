@@ -47,5 +47,4 @@ public interface NodeRepository extends JpaRepository <Node, String> {
         nativeQuery = true)
     Page<Node> findByVerb(@Param("verbid") String verbId, Pageable pageable);
     
-    
 }

@@ -50,6 +50,20 @@ public class MetaInformation implements Serializable{
         this.metaInformationType = metaInformationType;
     }
 
-
+    @Override
+    public int hashCode() {
+       int result=1;
+        result = 31 * result + (metaInformationType!= null ? metaInformationType.hashCode() : 0);
+        return result;
+    }
+    
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if ( !(obj instanceof MetaInformation) ) return false;
+        final MetaInformation meta = (MetaInformation) obj;
+        if ( !meta.getMetaInformationType().equals(getMetaInformationType())) return false;
+        return true;
+    }
     
 }

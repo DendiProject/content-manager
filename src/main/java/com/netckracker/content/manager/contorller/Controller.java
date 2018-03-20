@@ -5,15 +5,20 @@
  */
 package com.netckracker.content.manager.contorller;
 
+import com.netckracker.content.manager.Hash;
 import com.netckracker.content.manager.model.NodeDto;
-
-import com.netckracker.content.manager.resource.Resource;
+import com.netckracker.content.manager.service.NodeService;
 import com.netckracker.content.manager.service.NodeServiceImpl;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.LinkedBlockingQueue;
+import java.util.Map;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,27 +33,31 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class Controller {
     
     @Autowired
-    private NodeServiceImpl nodeService;      
-     @Autowired
-     private LinkedBlockingQueue<Resource> blockingQueue;
-     
-    @RequestMapping(value = "/tag/addtag", method = RequestMethod.POST)
-    public ResponseEntity<Void> addTag(@RequestBody  String nodeId,@RequestBody  String tagName){
+    private NodeService nodeService;    
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
+
+
+   
+    @RequestMapping(value = "/tag/addtag/{nodeId}", method = RequestMethod.POST, 
+            consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
+    public ResponseEntity<Void> addTag(@PathVariable String nodeId,@RequestParam String tagName){
         nodeService.addTag(nodeId, tagName);       
         return new ResponseEntity<>(HttpStatus.OK);
     }
     
-    @RequestMapping(value = "/verb/addverb", method = RequestMethod.POST)
-    public ResponseEntity<Void> addVerb(@RequestBody  String nodeId,@RequestBody  String verbName){
+    @RequestMapping(value = "/verb/addverb/{nodeId}", method = RequestMethod.POST,
+            consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
+    public ResponseEntity<Void> addVerb(@PathVariable  String nodeId,@RequestParam  String verbName){
         nodeService.addVerb(nodeId, verbName);       
         return new ResponseEntity<>(HttpStatus.OK);
     }
    
-    @RequestMapping(value = "/tag/{name}", method = RequestMethod.GET)
-    public ResponseEntity<List<NodeDto>> getNodeByTag(
-        @RequestParam(required = true, value = "name") String name) {
+    @RequestMapping(value = "/tag/{name}", method = RequestMethod.GET,
+            consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
+    public ResponseEntity<List<NodeDto>> getNodeByTag(@PathVariable String name) {
         
-        List<NodeDto> nodes=nodeService.findByTag(name, 0, 0);
+        List<NodeDto> nodes=nodeService.findByTag(name, 0, 2);
         if (nodes == null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -58,8 +67,8 @@ public class Controller {
     }
     
         @RequestMapping(value = "/verb/{name}", method = RequestMethod.GET)
-    public ResponseEntity<List<NodeDto>> getNodeByVer(
-         @RequestParam(required = true, value = "name")String name) {
+    public ResponseEntity<List<NodeDto>> getNodeByVerb(
+         @PathVariable String name) {
         
         List<NodeDto> nodes=nodeService.findByVerb(name, 0, 0);
        
@@ -71,15 +80,10 @@ public class Controller {
             return new ResponseEntity<>(nodes, HttpStatus.OK);
         }        
     }
-    @RequestMapping(value = "/node/addnode", method = RequestMethod.POST)
-    public ResponseEntity<NodeDto> addNode(@RequestBody  byte array[], String type) throws InterruptedException{
-        Resource resource=new Resource(array, type, null, 0);
-       // nodeService.getResources().add(resource);
-        blockingQueue.put(resource);
-        nodeService.addNode();
-        NodeDto node=new NodeDto();
-       // nodeService.addNode(array, type, type, 0);
-        return new ResponseEntity<>(node, HttpStatus.OK);
+    @RequestMapping(value = "/node/addnodeimg", method = RequestMethod.POST)
+    public ResponseEntity<NodeDto> addNode(@RequestBody  String fileName, String type, int size, String extension) throws InterruptedException{
+       NodeDto node=nodeService.addNodeImg(fileName, type, null, size, extension); 
+       return new ResponseEntity<>(node, HttpStatus.OK);
     }
     
 }

@@ -5,29 +5,38 @@
  */
 package com.netckracker.content.manager;
 
+import static com.google.common.base.CharMatcher.is;
 import com.netckracker.content.manager.contorller.Controller;
+import com.netckracker.content.manager.contorller.FileController;
 import com.netckracker.content.manager.model.Node;
 import com.netckracker.content.manager.model.NodeDto;
-import com.netckracker.content.manager.model.NodeType;
 import com.netckracker.content.manager.model.Tag;
 import com.netckracker.content.manager.model.TagDto;
 
 import com.netckracker.content.manager.repository.NodeRepository;
 import com.netckracker.content.manager.repository.TagRepository;
-import com.netckracker.content.manager.resource.Resource;
-import com.netckracker.content.manager.service.NodeService;
 import com.netckracker.content.manager.service.NodeServiceImpl;
-import java.util.ArrayList;
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
+import java.util.Map;
 import javax.transaction.Transactional;
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.web.multipart.MultipartFile;
+import sun.net.www.URLConnection;
 
 /**
  *
@@ -36,15 +45,18 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest
 @Transactional
+@ContextConfiguration(classes=App.class)
 public class NodeTest {
     @Autowired
-    private Controller controller;
+    private FileController controller;
     @Autowired
     private NodeServiceImpl nodeService;
     @Autowired
     private NodeRepository nodeRepository;
     @Autowired
     private TagRepository tagRepository;
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
     private static final String NAME="tag";
         
     @Test
@@ -73,10 +85,33 @@ public class NodeTest {
 
     }
     @Test 
-    public void addNodeTest() throws InterruptedException {
-        byte[] array=null;
-       controller.addNode(array, "image");
-       
+    public void addNodeTest() throws InterruptedException, FileNotFoundException, IOException {
+        
+      /*  System.out.println("Start addNode test");
+        
+        FileInputStream fin=new FileInputStream(f);
+        byte[] content=new byte[fin.available()];
+        fin.read(content, 0, fin.available());
+        int size=fin.available();
+        fin.close();
+        Map<String, String> newNode = new HashMap<>();
+       newNode.put("content", Arrays.toString(content));
+       newNode.put("type",  "image");
+       newNode.put("userId", null);
+       newNode.put("size", String.valueOf(size));
+      */
+    /*  Node n=new Node();
+      n.setName("node");
+      Node saved=nodeRepository.save(n);
+      File f =new File ("E://1.jpg");
+      String content = new String();
+        Map<String, String> newFile = new HashMap<>();
+        newFile.put("content", content);
+        newFile.put("nodeId", saved.getId());
+        rabbitTemplate.convertAndSend(newFile);
+       */
+     //  controller.addNode(content, "image",0 );
+        
     }
-            
+ 
 }

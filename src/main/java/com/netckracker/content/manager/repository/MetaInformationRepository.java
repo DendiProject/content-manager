@@ -18,5 +18,6 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface MetaInformationRepository extends JpaRepository <MetaInformation, String> {
+  MetaInformation  findByMetaInformationType(String metaInfType);
     
 }

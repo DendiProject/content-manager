@@ -7,8 +7,10 @@ package com.netckracker.content.manager.service;
 
 
 import com.netckracker.content.manager.convertor.Convertor;
+import com.netckracker.content.manager.model.MetaInformation;
 import com.netckracker.content.manager.model.Node;
 import com.netckracker.content.manager.model.NodeDto;
+import com.netckracker.content.manager.model.NodeType;
 import com.netckracker.content.manager.repository.NodeRepository;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,19 +20,15 @@ import com.netckracker.content.manager.model.Tag;
 import com.netckracker.content.manager.model.TagDto;
 import com.netckracker.content.manager.model.Verb;
 import com.netckracker.content.manager.model.VerbDto;
-
 import com.netckracker.content.manager.repository.NodeTypeRepository;
 import com.netckracker.content.manager.repository.TagRepository;
 import com.netckracker.content.manager.repository.VerbRepository;
-import com.netckracker.content.manager.resource.Resource;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
+import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -54,25 +52,35 @@ public class NodeServiceImpl implements NodeService{
     private NodeTypeRepository nodeTypeRepository;
     @Autowired
     private Convertor convertor;
-    final static String IMAGE_RESOURCE_PATH = "/filestorage/";
+    @Autowired
+    private StorageService fileService;
 
-     @Autowired
-     private LinkedBlockingQueue<Resource> blockingQueue; 
+    
 
+      
     @Transactional
     @Override
-    public  String addNode() {  
-       
-        try {
+    public  NodeDto addNodeImg( String fileName, String type, String userId, int size, String extension) {  
+        System.out.println(type);
+
+            Node node=new Node();
+            NodeType nodeType=nodeTypeRepository.findByName(type);
+            node.setNodeType(nodeType);
+            node.setName(fileName);
+            Node saved=nodeRepository.save(node);
             
-            Resource rec=blockingQueue.take();
-            System.out.println(rec.getType());
-        } catch (InterruptedException ex) {
-            Logger.getLogger(NodeServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return null;
-     
-      // throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            MetaInformation fileSize=new MetaInformation();
+            fileSize.setMetaInformationType("size");
+            fileSize.setValue(String.valueOf(size));
+            MetaInformation fileExtension=new MetaInformation();
+            fileExtension.setMetaInformationType("extension");
+            fileExtension.setValue(extension);
+            
+            saved.getMetaList().add(fileSize);
+            saved.getMetaList().add(fileExtension);
+            nodeRepository.save(saved);
+            NodeDto newNode=convertor.convertNodeToDto(saved);
+            return newNode;
     }
     
 
@@ -81,12 +89,20 @@ public class NodeServiceImpl implements NodeService{
     public void deleteNode(String id) {        
         Node node=nodeRepository.findById(id);
         String hash=node.getCheckSum();        
-        String fileName=node.getName()+"."+node.getNodeType().getName();
+        String name=node.getName();
+        String extension=new String();
+           for (Iterator<MetaInformation> it = node.getMetaList().iterator(); it.hasNext(); ) {
+                MetaInformation meta = it.next();
+               if (meta.getMetaInformationType().equals("extension"))
+               {
+                    extension=meta.getValue();
+               }            
+            }
+           String fileName=new String (name+"."+extension);
         nodeRepository.delete(node);
         if (nodeRepository.findByCheckSum(hash)==null)
-            {
-                File f=new File(IMAGE_RESOURCE_PATH+fileName);
-                f.delete();
+            {                
+                fileService.delete(fileName);
             }
     }
 
@@ -136,9 +152,8 @@ public class NodeServiceImpl implements NodeService{
             if (tag==null)
             {
                 Tag newTag=new Tag();
-                newTag.setName(tagName);
-                tagRepository.save(newTag);
-                Tag saved=tagRepository.findByName(tagName);
+                newTag.setName(tagName);                
+                Tag saved=tagRepository.save(newTag);
                 Node node=nodeRepository.findById(nodeId);
                 node.getTagList().add(saved);                 
                 nodeRepository.save(node);
@@ -164,8 +179,8 @@ public class NodeServiceImpl implements NodeService{
     @Override
     public List<NodeDto> findByTag(String nameTag,  int page, int size) {
        Tag tag=tagRepository.findByName(nameTag);     
-       List <Node> nodes=new ArrayList<>();    
-       nodes=nodeRepository.findByTag(tag.getId(), new PageRequest(page, size)).getContent();
+       // nodes=new ArrayList<>();    
+       List <Node>nodes=nodeRepository.findByTag(tag.getId(), new PageRequest(page, size)).getContent();
        return nodes.stream()
                .map(node->convertor.convertNodeToDto(node))
                .collect(Collectors.toList());
