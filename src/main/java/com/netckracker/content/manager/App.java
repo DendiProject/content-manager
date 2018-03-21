@@ -1,7 +1,9 @@
 package com.netckracker.content.manager;
 
 import com.netckracker.content.manager.model.Node;
+import com.netckracker.content.manager.model.NodeType;
 import com.netckracker.content.manager.repository.NodeRepository;
+import com.netckracker.content.manager.repository.NodeTypeRepository;
 import com.netckracker.content.manager.service.NodeService;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -21,9 +23,11 @@ import org.springframework.context.annotation.ComponentScan;
 @SpringBootApplication
 public class App 
 {
+
     public static void main( String[] args ) throws FileNotFoundException, IOException, InterruptedException  
     {        
-	SpringApplication.run(App.class, args);                
+	SpringApplication.run(App.class, args);    
+
     }
     @Bean
     public ModelMapper modelMapper() {

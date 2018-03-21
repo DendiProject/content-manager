@@ -5,6 +5,7 @@ spring:
     hibernate:
       dialect: org.hibernate.dialect.H2Dialect
       format_sql: true
+      ddl-auto: update
       naming:
        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
 spring.datasource:  
@@ -16,8 +17,7 @@ spring.datasource:
   testWhileIdle: true
   validationQuery: SELECT 1
 flyway:
-  schemas:
-    - public
+  enabled: true
   metaDataTableName: schema_version
 spring.rabbitmq:
     host: localhost

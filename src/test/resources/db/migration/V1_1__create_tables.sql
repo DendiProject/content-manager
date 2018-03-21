@@ -34,7 +34,6 @@ CREATE TABLE tag
 (
     tag_id character varying(255) NOT NULL,
     tag_name character varying(255),
-    node_id character varying(255) ,
     CONSTRAINT tag_pkey PRIMARY KEY (tag_id)
 );
 
@@ -42,7 +41,6 @@ CREATE TABLE verb
 (
     verb_id character varying(255) NOT NULL,
     verb_name character varying(255) ,
-    node_id character varying(255) ,
     CONSTRAINT verb_pkey PRIMARY KEY (verb_id)
 );
 

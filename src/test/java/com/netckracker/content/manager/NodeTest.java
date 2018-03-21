@@ -10,10 +10,12 @@ import com.netckracker.content.manager.contorller.Controller;
 import com.netckracker.content.manager.contorller.FileController;
 import com.netckracker.content.manager.model.Node;
 import com.netckracker.content.manager.model.NodeDto;
+import com.netckracker.content.manager.model.NodeType;
 import com.netckracker.content.manager.model.Tag;
 import com.netckracker.content.manager.model.TagDto;
 
 import com.netckracker.content.manager.repository.NodeRepository;
+import com.netckracker.content.manager.repository.NodeTypeRepository;
 import com.netckracker.content.manager.repository.TagRepository;
 import com.netckracker.content.manager.service.NodeServiceImpl;
 import java.io.BufferedInputStream;
@@ -57,12 +59,18 @@ public class NodeTest {
     private TagRepository tagRepository;
     @Autowired
     private RabbitTemplate rabbitTemplate;
+        @Autowired
+    private NodeTypeRepository nodeTypeRepository;
     private static final String NAME="tag";
         
     @Test
     public void addTagTest(){
         Node node=new Node();
         node.setName("111");
+        NodeType type=new NodeType();
+        type.setName("image");
+        NodeType savedType=nodeTypeRepository.save(type);
+        node.setNodeType(savedType);
         Node saved=nodeRepository.save(node);       
         nodeService.addTag(saved.getId(), NAME);
         Tag tag=tagRepository.findByName(NAME);

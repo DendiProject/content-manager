@@ -6,7 +6,9 @@
 package com.netckracker.content.manager;
 
 import com.netckracker.content.manager.model.Node;
+import com.netckracker.content.manager.model.NodeType;
 import com.netckracker.content.manager.repository.NodeRepository;
+import com.netckracker.content.manager.repository.NodeTypeRepository;
 import com.netckracker.content.manager.service.NodeService;
 import org.junit.Before;
 import org.junit.Test;
@@ -40,6 +42,8 @@ public class ControllerTest {
     @Autowired
     private NodeRepository nodeRepository;
     @Autowired
+    private NodeTypeRepository nodeTypeRepository;
+    @Autowired
     private WebApplicationContext wac;
     @Before
     public void setUp() {
@@ -51,6 +55,10 @@ public class ControllerTest {
     {
        Node node=new Node();
         node.setName("node");
+        NodeType type=new NodeType();
+        type.setName("image");
+        NodeType savedType=nodeTypeRepository.save(type);
+        node.setNodeType(savedType);
         Node saved=nodeRepository.save(node);
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders
                 .post("/tag/addtag/"+ saved.getId());
@@ -64,6 +72,10 @@ public class ControllerTest {
     {
          Node node=new Node();
         node.setName("node");
+        NodeType type=new NodeType();
+        type.setName("image");
+        NodeType savedType=nodeTypeRepository.save(type);
+        node.setNodeType(savedType);
         Node saved=nodeRepository.save(node);
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders
                 .post("/verb/addverb/"+ saved.getId());
@@ -76,11 +88,16 @@ public class ControllerTest {
     @Test
     public void getNodesByTagTest () throws Exception
     {
-        /*System.out.println("Start test");
+        
         Node n1=new Node();
         Node n2=new Node();
         n1.setName("node1");
         n2.setName("node2");
+        NodeType type=new NodeType();
+        type.setName("image");
+        NodeType savedType=nodeTypeRepository.save(type);
+        n1.setNodeType(savedType);
+        n2.setNodeType(savedType);
         Node saved1=nodeRepository.save(n1);
         Node saved2=nodeRepository.save(n2);
         String nodeId1=saved1.getId();

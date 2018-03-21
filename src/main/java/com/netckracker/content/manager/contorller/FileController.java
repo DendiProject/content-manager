@@ -9,6 +9,7 @@ import com.netckracker.content.manager.model.NodeDto;
 import com.netckracker.content.manager.repository.NodeRepository;
 import com.netckracker.content.manager.service.NodeServiceImpl;
 import com.netckracker.content.manager.service.StorageService;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.HashMap;
@@ -44,7 +45,11 @@ public class FileController {
     
 @RequestMapping(value = "/file/addfile/{nodeId}", method = RequestMethod.POST)
     public ResponseEntity<Void> addFile(@RequestParam("file") MultipartFile file,@PathVariable String nodeId) throws IOException{
-        String content = new String(file.getBytes());
+        FileInputStream fis=new FileInputStream((File) file);
+        byte[] array=new byte[fis.available()];
+        fis.read(array, 0, fis.available());
+        fis.close();
+        String content = new String(array);
         Map<String, String> newFile = new HashMap<>();
         newFile.put("content", content);
         newFile.put("nodeId", nodeId);
