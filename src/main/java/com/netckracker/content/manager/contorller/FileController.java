@@ -19,6 +19,7 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -43,7 +44,8 @@ public class FileController {
     @Autowired
     private RabbitTemplate rabbitTemplate;
     
-@RequestMapping(value = "/file/addfile/{nodeId}", method = RequestMethod.POST)
+    @RequestMapping(value = "/file/addfile/{nodeId}", method = RequestMethod.POST, 
+            consumes = MediaType.IMAGE_JPEG_VALUE, produces = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
     public ResponseEntity<Void> addFile(@RequestParam("file") MultipartFile file,@PathVariable String nodeId) throws IOException{
         FileInputStream fis=new FileInputStream((File) file);
         byte[] array=new byte[fis.available()];
@@ -53,12 +55,13 @@ public class FileController {
         Map<String, String> newFile = new HashMap<>();
         newFile.put("content", content);
         newFile.put("nodeId", nodeId);
+        newFile.put("userId",null);
         rabbitTemplate.convertAndSend(newFile);
         return new ResponseEntity<>(HttpStatus.OK);
     }
     
-    @RequestMapping(value = "/file/get/{nodeId}", method = RequestMethod.GET)
-    public ResponseEntity<byte[]> getNodeByVer(
+    @RequestMapping(value = "/file/getfile/{nodeId}", method = RequestMethod.GET)
+    public ResponseEntity<byte[]> getNode(
          @RequestParam(required = true, value = "nodeId")String nodeId) throws IOException {
         
         byte[] content=storageService.load(nodeId);
@@ -73,4 +76,19 @@ public class FileController {
             return new ResponseEntity<byte[]>(content,responseHeaders, HttpStatus.OK);
             }
         } 
+    @RequestMapping(value = "/file/adduserfile/{nodeId}", method = RequestMethod.POST)
+    public ResponseEntity<Void> addUserFile(@RequestParam("file") MultipartFile file,@PathVariable String nodeId) throws IOException{
+        FileInputStream fis=new FileInputStream((File) file);
+        byte[] array=new byte[fis.available()];
+        fis.read(array, 0, fis.available());
+        fis.close();
+        String content = new String(array);
+        Map<String, String> newFile = new HashMap<>();
+        newFile.put("content", content);
+        newFile.put("nodeId", nodeId);
+        newFile.put("userId",null);
+        rabbitTemplate.convertAndSend(newFile);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
 }

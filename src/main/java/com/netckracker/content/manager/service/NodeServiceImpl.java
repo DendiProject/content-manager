@@ -20,6 +20,7 @@ import com.netckracker.content.manager.model.Tag;
 import com.netckracker.content.manager.model.TagDto;
 import com.netckracker.content.manager.model.Verb;
 import com.netckracker.content.manager.model.VerbDto;
+import com.netckracker.content.manager.repository.MetaInformationRepository;
 import com.netckracker.content.manager.repository.NodeTypeRepository;
 import com.netckracker.content.manager.repository.TagRepository;
 import com.netckracker.content.manager.repository.VerbRepository;
@@ -54,31 +55,43 @@ public class NodeServiceImpl implements NodeService{
     private Convertor convertor;
     @Autowired
     private StorageService fileService;
+    @Autowired
+    private MetaInformationRepository metaRepository;
 
     
 
       
     @Transactional
     @Override
-    public  NodeDto addNodeImg( String fileName, String type, String userId, int size, String extension) {  
+    public  NodeDto addNodeImg( String fileName, String type, String userId, String size, String extension) {  
         System.out.println(type);
 
             Node node=new Node();
             NodeType nodeType=nodeTypeRepository.findByName(type);
-            node.setNodeType(nodeType);
+            if (nodeType==null)
+            {   
+                NodeType newNodeType=new NodeType();
+                newNodeType.setName(type);
+                NodeType savedType=nodeTypeRepository.save(newNodeType);
+                node.setNodeType(savedType);
+            }
+            else 
+            {
+                node.setNodeType(nodeType);
+            }                
             node.setName(fileName);
-            Node saved=nodeRepository.save(node);
-            
+            node.setUserId(userId);
             MetaInformation fileSize=new MetaInformation();
             fileSize.setMetaInformationType("size");
-            fileSize.setValue(String.valueOf(size));
+            fileSize.setValue(size);
             MetaInformation fileExtension=new MetaInformation();
             fileExtension.setMetaInformationType("extension");
             fileExtension.setValue(extension);
-            
-            saved.getMetaList().add(fileSize);
-            saved.getMetaList().add(fileExtension);
-            nodeRepository.save(saved);
+            MetaInformation savedFileSize=metaRepository.save(fileSize);
+            MetaInformation savedFileExtension=metaRepository.save(fileExtension);
+            node.getMetaList().add(savedFileSize);
+            node.getMetaList().add(savedFileExtension);
+            Node saved=nodeRepository.save(node);
             NodeDto newNode=convertor.convertNodeToDto(saved);
             return newNode;
     }

@@ -32,7 +32,6 @@ CREATE TABLE metainformation
     meta_inf_id character varying(255)  NOT NULL,
     meta_inf_type character varying(255),
     meta_value character varying(255),    
-    node_id character varying(255)  NOT NULL,
     CONSTRAINT metainformation_pkey PRIMARY KEY (meta_inf_id)
 )
 WITH (
@@ -72,3 +71,18 @@ CREATE TABLE nodetext
 WITH (
     OIDS = FALSE
 );
+
+CREATE TABLE Node_tagList 
+    (Node_node_id varchar(255) not null, 
+    tagList_tag_id varchar(255) not null,
+     primary key (Node_node_id, tagList_tag_id));
+
+CREATE TABLE Node_verbList 
+    (Node_node_id varchar(255) not null, 
+    verbList_verb_id varchar(255) not null, 
+    primary key (Node_node_id, verbList_verb_id));
+
+CREATE TABLE Node_metaList 
+    (Node_node_id varchar(255) not null,
+     metaList_meta_inf_id varchar(255) not null, 
+    primary key (Node_node_id, metaList_meta_inf_id));

@@ -10,6 +10,7 @@ import com.netckracker.content.manager.model.NodeType;
 import com.netckracker.content.manager.repository.NodeRepository;
 import com.netckracker.content.manager.repository.NodeTypeRepository;
 import com.netckracker.content.manager.service.NodeService;
+import java.io.File;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,6 +27,7 @@ import static org.hamcrest.Matchers.is;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.context.WebApplicationContext;
 
 /**
@@ -105,12 +107,31 @@ public class ControllerTest {
         String tagName="nodeta";
         nodeService.addTag(nodeId1, tagName);
         nodeService.addTag(nodeId2, tagName);
-       /* MockHttpServletRequestBuilder request = MockMvcRequestBuilders
+      /*  MockHttpServletRequestBuilder request = MockMvcRequestBuilders
                 .get("tag/"+ tagName);
         request.contentType(MediaType.APPLICATION_JSON);
         ResultActions result = mockMvc.perform(request);
         result.andExpect(MockMvcResultMatchers.status().isOk());
                 //.andExpect(jsonPath("$.id", is(saved1.getId())));*/
     }
-            
+    @Test
+    public void addNodeTest() throws Exception
+    {
+        File f=new File("src\\test\\resources\\WEB-INF\\images\\1.jpg");
+        String fileName=new String("1");
+        String type=new String("image/jpeg");
+        String size=new String(String.valueOf(f.length()));
+        String extension=new String("jpg");
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders
+                .post("/node/addnodeimg");
+        request.param("fileName", fileName);
+        request.param("type", type);
+        request.param("size", size);
+        request.param("extension", extension);
+        request.contentType(MediaType.APPLICATION_JSON);
+        request.accept(MediaType.APPLICATION_JSON);
+       ResultActions result = mockMvc.perform(request);
+        result.andExpect(MockMvcResultMatchers.status().isOk());
+    }      
+    
 }

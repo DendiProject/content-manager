@@ -5,7 +5,7 @@ spring:
     hibernate:
       dialect: org.hibernate.dialect.H2Dialect
       format_sql: true
-      ddl-auto: update
+      ddl-auto: none
       naming:
        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
 spring.datasource:  

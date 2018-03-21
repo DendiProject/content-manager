@@ -80,8 +80,9 @@ public class Controller {
             return new ResponseEntity<>(nodes, HttpStatus.OK);
         }        
     }
-    @RequestMapping(value = "/node/addnodeimg", method = RequestMethod.POST)
-    public ResponseEntity<NodeDto> addNode(@RequestBody  String fileName, String type, int size, String extension) throws InterruptedException{
+    @RequestMapping(value = "/node/addnodeimg", method = RequestMethod.POST,
+            consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
+    public ResponseEntity<NodeDto> addNode(@RequestParam  String fileName, @RequestParam String type, @RequestParam String size,  @RequestParam String extension) throws InterruptedException{
        NodeDto node=nodeService.addNodeImg(fileName, type, null, size, extension); 
        return new ResponseEntity<>(node, HttpStatus.OK);
     }

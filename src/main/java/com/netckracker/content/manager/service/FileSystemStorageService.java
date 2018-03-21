@@ -90,12 +90,12 @@ public class FileSystemStorageService implements StorageService{
     @Override
     public byte[] load( String nodeId) throws FileNotFoundException, IOException {
         Node node=nodeRepository.findById(nodeId);
-        File f=new File(node.getNodeSource());
+            File f=new File(node.getNodeSource());
         FileInputStream fin=new FileInputStream(f);
         byte[] content = new byte[fin.available()];
 
         fin.read(content, 0, fin.available());
-        return content;
+        return content;            
         
     }
     
