@@ -24,9 +24,10 @@ import org.springframework.context.annotation.Configuration;
  * @author eliza
  */
 @Configuration
-@EnableAutoConfiguration
+//@EnableAutoConfiguration
 public class QueueConfiguration {
- 
+    
+    
     @Bean
     Queue queue() {
             return new Queue("QUEUE");  
@@ -48,7 +49,6 @@ public class QueueConfiguration {
 		container.setConnectionFactory(connectionFactory);
 		container.setQueueNames("QUEUE");
 		container.setMessageListener(listenerAdapter);
-               
 		return container;
 	}
 
@@ -59,9 +59,7 @@ public class QueueConfiguration {
         @Bean
 	public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory) {
 		RabbitTemplate template = new RabbitTemplate(connectionFactory);
-		//The routing key is set to the name of the queue by the broker for the default exchange.
 		template.setRoutingKey("QUEUE");
-		//Where we will synchronously receive messages from
 		template.setQueue("QUEUE");
 		return template;
 	}

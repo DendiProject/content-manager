@@ -10,6 +10,7 @@ import com.netckracker.content.manager.convertor.Convertor;
 import com.netckracker.content.manager.model.MetaInformation;
 import com.netckracker.content.manager.model.Node;
 import com.netckracker.content.manager.model.NodeDto;
+import com.netckracker.content.manager.model.NodeText;
 import com.netckracker.content.manager.model.NodeType;
 import com.netckracker.content.manager.repository.NodeRepository;
 import java.util.List;
@@ -21,6 +22,7 @@ import com.netckracker.content.manager.model.TagDto;
 import com.netckracker.content.manager.model.Verb;
 import com.netckracker.content.manager.model.VerbDto;
 import com.netckracker.content.manager.repository.MetaInformationRepository;
+import com.netckracker.content.manager.repository.NodeTextRepository;
 import com.netckracker.content.manager.repository.NodeTypeRepository;
 import com.netckracker.content.manager.repository.TagRepository;
 import com.netckracker.content.manager.repository.VerbRepository;
@@ -29,7 +31,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -57,6 +58,8 @@ public class NodeServiceImpl implements NodeService{
     private StorageService fileService;
     @Autowired
     private MetaInformationRepository metaRepository;
+    @Autowired
+    private NodeTextRepository textRepository;
 
     
 
@@ -64,8 +67,6 @@ public class NodeServiceImpl implements NodeService{
     @Transactional
     @Override
     public  NodeDto addNodeImg( String fileName, String type, String userId, String size, String extension) {  
-        System.out.println(type);
-
             Node node=new Node();
             NodeType nodeType=nodeTypeRepository.findByName(type);
             if (nodeType==null)
@@ -79,7 +80,7 @@ public class NodeServiceImpl implements NodeService{
             {
                 node.setNodeType(nodeType);
             }                
-            node.setName(fileName);
+            node.setName(fileName+"."+extension);
             node.setUserId(userId);
             MetaInformation fileSize=new MetaInformation();
             fileSize.setMetaInformationType("size");
@@ -101,22 +102,17 @@ public class NodeServiceImpl implements NodeService{
     @Override
     public void deleteNode(String id) {        
         Node node=nodeRepository.findById(id);
-        String hash=node.getCheckSum();        
-        String name=node.getName();
-        String extension=new String();
-           for (Iterator<MetaInformation> it = node.getMetaList().iterator(); it.hasNext(); ) {
-                MetaInformation meta = it.next();
-               if (meta.getMetaInformationType().equals("extension"))
-               {
-                    extension=meta.getValue();
-               }            
-            }
-           String fileName=new String (name+"."+extension);
-        nodeRepository.delete(node);
-        if (nodeRepository.findByCheckSum(hash)==null)
+        if (node!=null)
+        {
+            String hash=node.getCheckSum();        
+        String fileName=node.getNodeSource();
+        nodeRepository.delete(node.getId());
+        if (nodeRepository.findByCheckSum(hash).isEmpty()&&fileName.isEmpty())
             {                
                 fileService.delete(fileName);
             }
+        }
+        
     }
 
     @Override
@@ -148,10 +144,12 @@ public class NodeServiceImpl implements NodeService{
                 Verb saved=verbRepository.save(newVerb);
                 Node node=nodeRepository.findById(nodeId);
                 node.getVerbList().add(saved);
+                nodeRepository.save(node);
             }
             else {
                 Node node=nodeRepository.findById(nodeId);
                 node.getVerbList().add(verb);
+                nodeRepository.save(node);
             }
         }        
     }
@@ -182,8 +180,7 @@ public class NodeServiceImpl implements NodeService{
     @Override
     public List<NodeDto> findByVerb(String nameVerb,  int page, int size) {
         Verb verb=verbRepository.findByName(nameVerb);
-        List <Node> nodes=new ArrayList<>();    
-       nodes=nodeRepository.findByVerb(verb.getId(), new PageRequest(page, size)).getContent();
+       List <Node> nodes=nodeRepository.findByVerb(verb.getId(), new PageRequest(page, size)).getContent();
        return nodes.stream()
                .map(node->convertor.convertNodeToDto(node))
                .collect(Collectors.toList());   
@@ -191,9 +188,8 @@ public class NodeServiceImpl implements NodeService{
 
     @Override
     public List<NodeDto> findByTag(String nameTag,  int page, int size) {
-       Tag tag=tagRepository.findByName(nameTag);     
-       // nodes=new ArrayList<>();    
-       List <Node>nodes=nodeRepository.findByTag(tag.getId(), new PageRequest(page, size)).getContent();
+       Tag tag=tagRepository.findByName(nameTag);        
+       List <Node> nodes=nodeRepository.findByTag(tag.getId(), new PageRequest(page, size)).getContent();
        return nodes.stream()
                .map(node->convertor.convertNodeToDto(node))
                .collect(Collectors.toList());
@@ -217,6 +213,66 @@ public class NodeServiceImpl implements NodeService{
         return tags.stream()
                .map(tag->convertor.convertTagToDto(tag))
                .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional
+    public NodeDto addNodeText(String name, String userId, String type, String size, String content) {
+        Node node=new Node();
+        node.setName(name);
+        node.setUserId(userId);
+        NodeType nodeType=nodeTypeRepository.findByName(type);
+            if (nodeType==null)
+            {   
+                NodeType newNodeType=new NodeType();
+                newNodeType.setName(type);
+                NodeType savedType=nodeTypeRepository.save(newNodeType);
+                node.setNodeType(savedType);
+            }
+            else 
+            {
+                node.setNodeType(nodeType);
+            }   
+        
+        MetaInformation fileSize=new MetaInformation();
+        fileSize.setMetaInformationType("size");
+        fileSize.setValue(size);
+        MetaInformation savedFileSize=metaRepository.save(fileSize);
+        node.getMetaList().add(savedFileSize);
+        Node saved=nodeRepository.save(node);
+        NodeText text=new NodeText();
+        text.setNode(saved);
+        text.setText(content);
+        textRepository.save(text);
+        NodeDto newNode=convertor.convertNodeToDto(saved);
+        return newNode;
+    }
+
+    @Override
+    public String getNodeText(String nodeId) {
+        Node node=nodeRepository.findById(nodeId);
+        if (node!=null)
+        {
+            NodeText text=textRepository.findByNode(node);
+            return text.getText();
+        }
+        else return null;
+    }
+
+    @Override
+    public void deleteNodeText(String nodeId) {
+        Node node=nodeRepository.findById(nodeId);
+        if (node!=null)
+        {
+            NodeText text=textRepository.findByNode(node);
+            if (text!=null)
+            {
+                textRepository.delete(text.getTextId());
+                nodeRepository.delete(nodeId);
+            }
+            
+        }
+        
     }
    
 }

@@ -5,21 +5,15 @@
  */
 package com.netckracker.content.manager.contorller;
 
-import com.netckracker.content.manager.Hash;
 import com.netckracker.content.manager.model.NodeDto;
 import com.netckracker.content.manager.service.NodeService;
-import com.netckracker.content.manager.service.NodeServiceImpl;
-import java.util.Arrays;
-import java.util.HashMap;
+import io.swagger.annotations.ApiOperation;
 import java.util.List;
-import java.util.Map;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -34,18 +28,16 @@ public class Controller {
     
     @Autowired
     private NodeService nodeService;    
-    @Autowired
-    private RabbitTemplate rabbitTemplate;
-
-
    
+    @ApiOperation("Add tag by nodeId")
     @RequestMapping(value = "/tag/addtag/{nodeId}", method = RequestMethod.POST, 
             consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
-    public ResponseEntity<Void> addTag(@PathVariable String nodeId,@RequestParam String tagName){
+    public ResponseEntity<Void> addTag(@PathVariable ("nodeId") String nodeId,@RequestParam String tagName){
         nodeService.addTag(nodeId, tagName);       
+       
         return new ResponseEntity<>(HttpStatus.OK);
     }
-    
+    @ApiOperation("Add verb by nodeId")
     @RequestMapping(value = "/verb/addverb/{nodeId}", method = RequestMethod.POST,
             consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
     public ResponseEntity<Void> addVerb(@PathVariable  String nodeId,@RequestParam  String verbName){
@@ -53,38 +45,84 @@ public class Controller {
         return new ResponseEntity<>(HttpStatus.OK);
     }
    
-    @RequestMapping(value = "/tag/{name}", method = RequestMethod.GET,
+    @ApiOperation("Get nodeList by tagName")
+    @RequestMapping(value = "/node/bytag/{tagName}", params = { "page", "size" },method = RequestMethod.GET,
             consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
-    public ResponseEntity<List<NodeDto>> getNodeByTag(@PathVariable String name) {
+    public  ResponseEntity<?> getNodesByTag(@PathVariable  String  tagName, @RequestParam( "page" ) int page, @RequestParam( "size" ) int size ){
         
-        List<NodeDto> nodes=nodeService.findByTag(name, 0, 2);
-        if (nodes == null){
+        if (size==0&&page==0)
+        {
+            page=0;
+            size=6;
+        }
+        
+        List<NodeDto> nodes=nodeService.findByTag(tagName,page, size);
+        if (nodes.isEmpty()){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        else{            
+        else{           
             return new ResponseEntity<>(nodes, HttpStatus.OK);
-        }        
+        }
     }
     
-        @RequestMapping(value = "/verb/{name}", method = RequestMethod.GET)
-    public ResponseEntity<List<NodeDto>> getNodeByVerb(
-         @PathVariable String name) {
-        
-        List<NodeDto> nodes=nodeService.findByVerb(name, 0, 0);
-       
-        
-        if (nodes == null){
+    @ApiOperation("Get nodeList by verbName")
+    @RequestMapping(value = "/node/byverb/{verbName}",params = { "page", "size" }, method = RequestMethod.GET,
+            consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
+    public ResponseEntity<?> getNodeByVerb(@PathVariable String verbName , @RequestParam( "page" ) int page, @RequestParam( "size" ) int size) {   
+        if (size==0&&page==0)
+        {
+            page=0;
+            size=6;
+        }
+        List<NodeDto> nodes=nodeService.findByVerb(verbName, page, size);      
+        if (nodes.isEmpty()){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         else{            
             return new ResponseEntity<>(nodes, HttpStatus.OK);
-        }        
+        }         
     }
+    
+    @ApiOperation("Add node image")
     @RequestMapping(value = "/node/addnodeimg", method = RequestMethod.POST,
             consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
     public ResponseEntity<NodeDto> addNode(@RequestParam  String fileName, @RequestParam String type, @RequestParam String size,  @RequestParam String extension) throws InterruptedException{
        NodeDto node=nodeService.addNodeImg(fileName, type, null, size, extension); 
        return new ResponseEntity<>(node, HttpStatus.OK);
+    }
+    
+    @ApiOperation("Delete node by Id")
+    @RequestMapping(value = "/node/deletenode/{nodeId}", method = RequestMethod.DELETE)
+    public ResponseEntity<Void> deleteNode(@PathVariable String nodeId) throws InterruptedException{
+       nodeService.deleteNode(nodeId);
+       return new ResponseEntity<>(HttpStatus.OK);
+    }
+    
+    @ApiOperation("Delete text node by Id")
+    @RequestMapping(value = "/node/deletenodetext/{nodeId}", method = RequestMethod.DELETE)
+    public ResponseEntity<Void> deleteNodeText(@PathVariable String nodeId) throws InterruptedException{
+       nodeService.deleteNodeText(nodeId);
+       return new ResponseEntity<>(HttpStatus.OK);
+    }
+    
+    @ApiOperation("Add node text")
+    @RequestMapping(value = "/node/addnodetext", method = RequestMethod.POST,
+            consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
+    public ResponseEntity<NodeDto> addNodeText(@RequestParam  String textName, @RequestParam  String type, @RequestParam String size, @RequestParam String content) throws InterruptedException{
+       NodeDto node=nodeService.addNodeText(textName, null, type, size,  content);
+       return new ResponseEntity<>(node, HttpStatus.OK);
+    }
+    
+    @ApiOperation("Get node text")
+    @RequestMapping(value = "/node/getnodetext/{nodeId}", method = RequestMethod.GET)
+    public ResponseEntity<?> getNodeText(@PathVariable String nodeId) {
+        String text=nodeService.getNodeText(nodeId);
+            if (text.isEmpty()){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        else{            
+            return new ResponseEntity<>(text, HttpStatus.OK);
+        }  
     }
     
 }

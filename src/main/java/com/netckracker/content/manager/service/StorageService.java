@@ -16,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
  */
 public interface StorageService {
 byte[] load( String nodeId)  throws FileNotFoundException, IOException;
-void store(byte[] content, String nodeId);
+void store(byte[] array, String nodeId);
 void delete(String fileName);
+public void init();
 }

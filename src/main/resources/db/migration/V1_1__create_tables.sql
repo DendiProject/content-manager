@@ -74,15 +74,19 @@ WITH (
 
 CREATE TABLE Node_tagList 
     (Node_node_id varchar(255) not null, 
-    tagList_tag_id varchar(255) not null,
-     primary key (Node_node_id, tagList_tag_id));
+    tagList_tag_id varchar(255) not null);
+alter table Node_tagList add constraint FK9g52vxo4gnsilfckxug56tgt9 foreign key (tagList_tag_id) references Tag;
+alter table Node_tagList add constraint FKgfgd00q37nwo8s5opbgjjiv8e foreign key (Node_node_id) references Node;
 
 CREATE TABLE Node_verbList 
     (Node_node_id varchar(255) not null, 
-    verbList_verb_id varchar(255) not null, 
-    primary key (Node_node_id, verbList_verb_id));
+    verbList_verb_id varchar(255) not null);
+
+alter table Node_verbList add constraint FK16w5m2vu8jdy8mm3vrur6y02k foreign key (verbList_verb_id) references Verb;
+alter table Node_verbList add constraint FKcawceeqdxd1vtl6vrl0ipuv04 foreign key (Node_node_id) references Node;
 
 CREATE TABLE Node_metaList 
     (Node_node_id varchar(255) not null,
-     metaList_meta_inf_id varchar(255) not null, 
-    primary key (Node_node_id, metaList_meta_inf_id));
+     metaList_meta_inf_id varchar(255) not null);
+alter table Node_metaList add constraint FKmvbg65j3c9h0b3x8gdk89bgkm foreign key (metaList_meta_inf_id) references MetaInformation;
+alter table Node_metaList add constraint FKcnko6lm5nfif9pk7n85bgupds foreign key (Node_node_id) references Node;

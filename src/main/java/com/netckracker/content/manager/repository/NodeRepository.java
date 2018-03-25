@@ -41,13 +41,13 @@ public interface NodeRepository extends JpaRepository <Node, String> {
     Page<Node> findByTag(@Param("tagid") String tagId, Pageable pageable);
     
     @Query(value = "select n.* from Node n Where n.node_id in"
-        + "(Select v.Node_node_id from Node_verbList v where n.node_id=v.Node_node_id and v.verbList_verb_id=:verbid)"
+        + "(Select t.Node_node_id from Node_verbList t where n.node_id=t.Node_node_id and t.verbList_verb_id=:verbid) "
             + " and n.user_id is null "
         + "ORDER BY n.node_id --#pageable\n",            
          countQuery = "select count(*) from Node n Where n.node_id in"
-        + "(Select v.Node_node_id from Node_verbList v where n.node_id=v.Node_node_id and v.verbList_verb_id=:verbid)"
+        + "(Select t.Node_node_id from Node_verbList t where n.node_id=t.Node_node_id and t.verbList_verb_id=:verbid)"
             + " and n.user_id is null "
-        + "ORDER BY n.node_id --#pageable\n", 
+        + "ORDER BY n.node_id --#pageable\n",
         nativeQuery = true)
     Page<Node> findByVerb(@Param("verbid") String verbId, Pageable pageable);
     

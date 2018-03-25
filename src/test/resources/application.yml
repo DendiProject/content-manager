@@ -19,11 +19,6 @@ spring.datasource:
 flyway:
   enabled: true
   metaDataTableName: schema_version
-spring.rabbitmq:
-    host: localhost
-    port: 5672
-    username: guest
-    password: guest
 http:
     multipart:
     max-file-size: 5MB

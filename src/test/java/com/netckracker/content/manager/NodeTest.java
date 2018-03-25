@@ -46,7 +46,6 @@ import sun.net.www.URLConnection;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest
-@Transactional
 @ContextConfiguration(classes=App.class)
 public class NodeTest {
     @Autowired
@@ -59,8 +58,10 @@ public class NodeTest {
     private TagRepository tagRepository;
     @Autowired
     private RabbitTemplate rabbitTemplate;
-        @Autowired
+    @Autowired
     private NodeTypeRepository nodeTypeRepository;
+    @Autowired
+    private Hash hash;
     private static final String NAME="tag";
         
     @Test
@@ -92,34 +93,4 @@ public class NodeTest {
         assertEquals("tag incorrect", "tag2", tags.get(1).getName());
 
     }
-    @Test 
-    public void addNodeTest() throws InterruptedException, FileNotFoundException, IOException {
-        
-      /*  System.out.println("Start addNode test");
-        
-        FileInputStream fin=new FileInputStream(f);
-        byte[] content=new byte[fin.available()];
-        fin.read(content, 0, fin.available());
-        int size=fin.available();
-        fin.close();
-        Map<String, String> newNode = new HashMap<>();
-       newNode.put("content", Arrays.toString(content));
-       newNode.put("type",  "image");
-       newNode.put("userId", null);
-       newNode.put("size", String.valueOf(size));
-      */
-    /*  Node n=new Node();
-      n.setName("node");
-      Node saved=nodeRepository.save(n);
-      File f =new File ("E://1.jpg");
-      String content = new String();
-        Map<String, String> newFile = new HashMap<>();
-        newFile.put("content", content);
-        newFile.put("nodeId", saved.getId());
-        rabbitTemplate.convertAndSend(newFile);
-       */
-     //  controller.addNode(content, "image",0 );
-        
-    }
- 
 }

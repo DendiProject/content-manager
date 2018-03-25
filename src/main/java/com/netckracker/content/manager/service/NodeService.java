@@ -26,7 +26,7 @@ public interface NodeService {
     public void addTag(String nodeId, String tagName);
     public List<VerbDto> findVerbByLetters(String letters);
     public List<TagDto> findTagByLetters(String letters);
-    
-    
-   
+    public NodeDto addNodeText(String name, String userId, String type, String size, String content);
+    public String getNodeText(String nodeId);   
+    public void deleteNodeText(String nodeId);
 }

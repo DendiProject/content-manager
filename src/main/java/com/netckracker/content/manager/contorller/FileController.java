@@ -5,13 +5,22 @@
  */
 package com.netckracker.content.manager.contorller;
 
+import com.netckracker.content.manager.model.Node;
 import com.netckracker.content.manager.model.NodeDto;
 import com.netckracker.content.manager.repository.NodeRepository;
 import com.netckracker.content.manager.service.NodeServiceImpl;
 import com.netckracker.content.manager.service.StorageService;
+import io.swagger.annotations.ApiOperation;
+import java.io.BufferedInputStream;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,28 +53,36 @@ public class FileController {
     @Autowired
     private RabbitTemplate rabbitTemplate;
     
-    @RequestMapping(value = "/file/addfile/{nodeId}", method = RequestMethod.POST, 
-            consumes = MediaType.IMAGE_JPEG_VALUE, produces = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
-    public ResponseEntity<Void> addFile(@RequestParam("file") MultipartFile file,@PathVariable String nodeId) throws IOException{
-        FileInputStream fis=new FileInputStream((File) file);
-        byte[] array=new byte[fis.available()];
-        fis.read(array, 0, fis.available());
-        fis.close();
-        String content = new String(array);
-        Map<String, String> newFile = new HashMap<>();
-        newFile.put("content", content);
-        newFile.put("nodeId", nodeId);
-        newFile.put("userId",null);
-        rabbitTemplate.convertAndSend(newFile);
+    @ApiOperation("Add file by Id")
+    @RequestMapping(value = "/file/addfile/{nodeId}", method = RequestMethod.POST)             
+    public ResponseEntity<Void> addFile(@RequestParam MultipartFile file,@PathVariable String nodeId) throws IOException{
+       
+        if (!file.isEmpty())
+        {
+            InputStream is =  new BufferedInputStream(file.getInputStream());
+            byte[] array=new byte[is.available()];
+            is.read(array, 0, is.available());
+            is.close();
+            Path tmp=Files.createTempFile(nodeId, null);
+            Files.write(tmp, array);
+            Node node=nodeRepository.findById(nodeId);
+            node.setNodeSource(tmp.toString());
+            Map<String, byte[]> newFile = new HashMap<>();
+            newFile.put("content", array);
+            newFile.put("nodeId", nodeId.getBytes());
+           // storageService.store(array, nodeId);
+            rabbitTemplate.convertAndSend(newFile);
+        }
+           
         return new ResponseEntity<>(HttpStatus.OK);
     }
     
+    @ApiOperation("Get file by Id")
     @RequestMapping(value = "/file/getfile/{nodeId}", method = RequestMethod.GET)
-    public ResponseEntity<byte[]> getNode(
-         @RequestParam(required = true, value = "nodeId")String nodeId) throws IOException {
-        
-        byte[] content=storageService.load(nodeId);
+    public ResponseEntity<byte[]> getNode(@PathVariable String nodeId) throws IOException {
+        byte[] content=null;
         String type =nodeRepository.findById(nodeId).getNodeType().getName();
+        content=storageService.load(nodeId);
         
         if (content == null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -73,22 +90,9 @@ public class FileController {
         else{            
             HttpHeaders responseHeaders = new HttpHeaders();
             responseHeaders.set("Content-Type", type);            
-            return new ResponseEntity<byte[]>(content,responseHeaders, HttpStatus.OK);
+            return new ResponseEntity<byte[]>(content, responseHeaders, HttpStatus.OK);
             }
-        } 
-    @RequestMapping(value = "/file/adduserfile/{nodeId}", method = RequestMethod.POST)
-    public ResponseEntity<Void> addUserFile(@RequestParam("file") MultipartFile file,@PathVariable String nodeId) throws IOException{
-        FileInputStream fis=new FileInputStream((File) file);
-        byte[] array=new byte[fis.available()];
-        fis.read(array, 0, fis.available());
-        fis.close();
-        String content = new String(array);
-        Map<String, String> newFile = new HashMap<>();
-        newFile.put("content", content);
-        newFile.put("nodeId", nodeId);
-        newFile.put("userId",null);
-        rabbitTemplate.convertAndSend(newFile);
-        return new ResponseEntity<>(HttpStatus.OK);
     }
+        
 
 }
