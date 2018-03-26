@@ -43,9 +43,7 @@ import org.springframework.web.multipart.MultipartFile;
  * @author eliza
  */
 @RestController
-public class FileController {
-    @Autowired
-    private NodeServiceImpl nodeService;   
+public class FileController { 
     @Autowired
     private NodeRepository nodeRepository; 
     @Autowired
@@ -57,7 +55,7 @@ public class FileController {
     @RequestMapping(value = "/file/addfile/{nodeId}", method = RequestMethod.POST)             
     public ResponseEntity<Void> addFile(@RequestParam MultipartFile file,@PathVariable String nodeId) throws IOException{
        
-        if (!file.isEmpty())
+         if (!file.isEmpty())
         {
             InputStream is =  new BufferedInputStream(file.getInputStream());
             byte[] array=new byte[is.available()];
@@ -70,7 +68,6 @@ public class FileController {
             Map<String, byte[]> newFile = new HashMap<>();
             newFile.put("content", array);
             newFile.put("nodeId", nodeId.getBytes());
-           // storageService.store(array, nodeId);
             rabbitTemplate.convertAndSend(newFile);
         }
            

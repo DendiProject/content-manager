@@ -8,6 +8,7 @@ package com.netckracker.content.manager;
 
 
 import com.netckracker.content.manager.model.NodeDto;
+import com.netckracker.content.manager.service.FileSystemStorageService;
 import com.netckracker.content.manager.service.NodeService;
 import com.netckracker.content.manager.service.StorageService;
 import java.io.File;
@@ -45,24 +46,19 @@ public class FileControllerTest {
     @Autowired
     private NodeService nodeService;
     @Autowired
-    private StorageService storageService;
+    private FileSystemStorageService storageService;
     @Autowired
     private WebApplicationContext wac;
-    EmbeddedBroker broker=new EmbeddedBroker(); 
     
     @Before
     public void setUp() throws Exception {
         mockMvc = webAppContextSetup(wac).build();
+        storageService.setRootLocation("target/files/filestorage");
         storageService.init();
                
-        broker.start();
+       
     }
-    @After
-    public void shutDownBroker()
-    {
-        broker.stop();
-    }
-    
+
     
     @Test
     public void addFileTest() throws Exception
@@ -83,18 +79,15 @@ public class FileControllerTest {
                 .file(f);
         ResultActions result = mockMvc.perform(request)
                  .andExpect(MockMvcResultMatchers.status().isOk());
-
     }
     
     @Test
     public void getFileTest() throws FileNotFoundException, IOException, Exception
     {
         URL resource = FileControllerTest.class.getResource("/WEB-INF/images/1.jpg");
-       // File f =new File();
-        String fileName=new String("1");
-        String type=new String("image/jpeg");
+        String type="image/jpeg";
         String size=String.valueOf(Paths.get(resource.toURI()).toFile().length());
-        String extension=new String("jpg");
+        String extension="jpg";
         NodeDto nodeDto=nodeService.addNodeImg("image", type, null, size, extension);
         FileInputStream fin=new FileInputStream(Paths.get(resource.toURI()).toFile());
         byte[] content = new byte[fin.available()];

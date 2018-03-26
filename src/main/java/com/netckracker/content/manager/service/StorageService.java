@@ -19,4 +19,5 @@ byte[] load( String nodeId)  throws FileNotFoundException, IOException;
 void store(byte[] array, String nodeId);
 void delete(String fileName);
 public void init();
+
 }

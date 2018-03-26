@@ -4,6 +4,8 @@ jdk:
 - oraclejdk8
 install:
   - mvn clean install
+services:
+  - rabbitmq
 script:
   - mvn test jacoco:report
 after_success:

@@ -40,7 +40,7 @@ public class FileSystemStorageService implements StorageService{
     @Autowired
     private NodeRepository nodeRepository;    
 
-    final static String PATH = "filestorage";
+    private String rootLocation="/filestorage";
     @Override
     public void store(byte[] array, String nodeId) { 
        
@@ -52,7 +52,7 @@ public class FileSystemStorageService implements StorageService{
             node.setCheckSum(checkSum);
             if (nodes.isEmpty())
             {            
-                File f=new File("/"+PATH+"/"+node.getName());
+                File f=new File(rootLocation+"/"+node.getName());
                 try {
                     FileOutputStream fos=new FileOutputStream(f);
                     fos.write(array);
@@ -94,9 +94,19 @@ public class FileSystemStorageService implements StorageService{
 
     @Override
     public void init() {    
-          File f=new File("/"+PATH);
-        if (!f.exists()) {
-            f.mkdir();
+        try {
+            Files.createDirectories(Paths.get(rootLocation));
+        } catch (IOException ex) {
+            Logger.getLogger(FileSystemStorageService.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+
+    public String getRootLocation() {
+        return rootLocation;
+    }
+
+    public void setRootLocation(String rootLocation) {
+        this.rootLocation = rootLocation;
+    }
+    
 }
