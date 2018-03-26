@@ -80,6 +80,7 @@ public class FileSystemStorageService implements StorageService{
 
     @Override
     public byte[] load( String nodeId) throws FileNotFoundException, IOException {
+        
          Node node=nodeRepository.findById(nodeId);
          byte[] content=null;
         if (node!=null)

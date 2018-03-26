@@ -1,5 +1,6 @@
 package com.netckracker.content.manager;
 
+import com.netckracker.content.manager.service.FileSystemStorageService;
 import com.netckracker.content.manager.service.StorageService;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -32,10 +33,10 @@ public class App
       return  new ModelMapper();
     }  
     
-    @Bean
-    CommandLineRunner init(StorageService storageService) {
-        return (args) -> {            
+   /* @Bean
+    CommandLineRunner init(FileSystemStorageService storageService) {
+        return (args) -> {     
             storageService.init();
         };
-    }
+    }*/
 }

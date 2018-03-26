@@ -54,9 +54,7 @@ public class FileControllerTest {
     public void setUp() throws Exception {
         mockMvc = webAppContextSetup(wac).build();
         storageService.setRootLocation("target/files/filestorage");
-        storageService.init();
-               
-       
+        storageService.init();     
     }
 
     
