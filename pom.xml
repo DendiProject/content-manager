@@ -22,7 +22,11 @@
       <asciidoctorj.version>1.5.6</asciidoctorj.version>
       <jruby.version>1.7.26</jruby.version>
    </properties>
-   <dependencies>
+   <dependencies>     
+      <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-jetty</artifactId>
+      </dependency>
       <dependency>
          <groupId>com.google.guava</groupId>
          <artifactId>guava</artifactId>
