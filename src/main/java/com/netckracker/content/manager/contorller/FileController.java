@@ -53,14 +53,9 @@ public class FileController {
     
     @ApiOperation("Add file by Id")
     @RequestMapping(value = "/file/addfile/{nodeId}", method = RequestMethod.POST)             
-    public ResponseEntity<Void> addFile(@RequestParam MultipartFile file,@PathVariable String nodeId) throws IOException{
+    public ResponseEntity<Void> addFile(@RequestBody byte array[],@PathVariable String nodeId) throws IOException{
        
-         if (!file.isEmpty())
-        {
-            InputStream is =  new BufferedInputStream(file.getInputStream());
-            byte[] array=new byte[is.available()];
-            is.read(array, 0, is.available());
-            is.close();
+         System.out.println("CONTROLLER");
             Path tmp=Files.createTempFile(nodeId, null);
             Files.write(tmp, array);
             Node node=nodeRepository.findById(nodeId);
@@ -69,7 +64,7 @@ public class FileController {
             newFile.put("content", array);
             newFile.put("nodeId", nodeId.getBytes());
             rabbitTemplate.convertAndSend(newFile);
-        }
+        
            
         return new ResponseEntity<>(HttpStatus.OK);
     }

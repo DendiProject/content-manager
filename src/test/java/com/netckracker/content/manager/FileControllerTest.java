@@ -23,6 +23,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpMethod;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -62,19 +63,25 @@ public class FileControllerTest {
     public void addFileTest() throws Exception
     {
         URL resource = FileControllerTest.class.getResource("/WEB-INF/images/1.jpg");
-        
-        FileInputStream fis = new FileInputStream(Paths.get(resource.toURI()).toFile());
+        File file=new File(resource.getPath());
+        /*FileInputStream fis = new FileInputStream(Paths.get(resource.toURI()).toFile());
         MockMultipartFile f = new MockMultipartFile("file", "1.jpg",
-                "image/jpeg",   fis);
+                "image/jpeg",   fis);*/
+        FileInputStream fis =new FileInputStream(file);
+        byte[] array=new byte[fis.available()];
+        fis.read(array, 0, fis.available());
         String fileName=new String("1");
         String type=new String("image/jpeg");
-        String size=String.valueOf(f.getSize());
+        String size=String.valueOf(file.length());
         String extension=new String("jpg");
         
-        NodeDto nodeDto=nodeService.addNodeImg(f.getName(), type, null, size, extension);
+        NodeDto nodeDto=nodeService.addNodeImg(file.getName(), type, null, size, extension);
         MockHttpServletRequestBuilder request=MockMvcRequestBuilders
-                .fileUpload("/file/addfile/"+nodeDto.getId())
-                .file(f);
+                .post("/file/addfile/"+nodeDto.getId()).content(array);
+               // .param("array", array);
+             /*   .fileUpload("/file/addfile/"+nodeDto.getId())
+                .file(f);*/
+                 //.request.param("tagName", "someta");
         ResultActions result = mockMvc.perform(request)
                  .andExpect(MockMvcResultMatchers.status().isOk());
     }

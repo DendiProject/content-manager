@@ -5,7 +5,12 @@
  */
 package com.netckracker.content.manager.initialize;
 
+import com.netckracker.content.manager.model.NodeDto;
 import com.netckracker.content.manager.service.FileSystemStorageService;
+import com.netckracker.content.manager.service.NodeService;
+import java.io.File;
+import java.io.FileInputStream;
+import java.nio.file.Paths;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -15,15 +20,15 @@ import org.springframework.stereotype.Component;
  * @author eliza
  */
 @Component
-public class DirectoryCreator implements  InitializingBean{
-    @Autowired
-    private FileSystemStorageService storageService;
+ public class DirectoryCreator implements  InitializingBean{
+     @Autowired
+     private FileSystemStorageService storageService;
+ 
+     @Override
+     public void afterPropertiesSet() throws Exception {
+         storageService.setRootLocation("/filestorage");
+         
+         storageService.init();
 
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        storageService.setRootLocation("/filestorage");
-        
-        storageService.init();
-    }
-    
+     }
 }
