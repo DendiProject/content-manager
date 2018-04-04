@@ -8,8 +8,10 @@ package com.netckracker.content.manager;
 import com.netckracker.content.manager.model.Node;
 import com.netckracker.content.manager.model.NodeDto;
 import com.netckracker.content.manager.model.NodeType;
+import com.netckracker.content.manager.model.Verb;
 import com.netckracker.content.manager.repository.NodeRepository;
 import com.netckracker.content.manager.repository.NodeTypeRepository;
+import com.netckracker.content.manager.repository.VerbRepository;
 import com.netckracker.content.manager.service.NodeService;
 import com.netckracker.content.manager.service.StorageService;
 import java.io.File;
@@ -63,6 +65,8 @@ public class ControllerTest {
     private NodeRepository nodeRepository;
     @Autowired
     private NodeTypeRepository nodeTypeRepository;
+    @Autowired
+    private VerbRepository verbRepository;
     @Autowired
     private WebApplicationContext wac;
 
@@ -239,5 +243,25 @@ public class ControllerTest {
         MockHttpServletRequestBuilder request=MockMvcRequestBuilders.delete("/node/deletenodetext/"+node.getId());
         ResultActions result = mockMvc.perform(request)
                  .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+    
+    @Test 
+    public void findVerbsByLettersTest() throws Exception
+    {
+        Verb verb1=new Verb();
+        Verb verb2=new Verb();
+        verb1.setName("someVerb1");
+        verb2.setName("someVerb2");
+        verbRepository.save(verb1);
+        verbRepository.save(verb2);
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders
+                .get("/verb/"+"some");
+        request.contentType(MediaType.APPLICATION_JSON);        
+       MvcResult  result = mockMvc.perform(request).andReturn();  
+       String expected = "[{name:"+verb1.getName()+"},{name:"+verb2.getName()+"}]";
+       JSONAssert.assertEquals(expected, result.getResponse()
+				.getContentAsString(), false);
+        
+        
     }
 }

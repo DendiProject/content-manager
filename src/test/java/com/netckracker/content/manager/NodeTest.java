@@ -13,10 +13,13 @@ import com.netckracker.content.manager.model.NodeDto;
 import com.netckracker.content.manager.model.NodeType;
 import com.netckracker.content.manager.model.Tag;
 import com.netckracker.content.manager.model.TagDto;
+import com.netckracker.content.manager.model.Verb;
+import com.netckracker.content.manager.model.VerbDto;
 
 import com.netckracker.content.manager.repository.NodeRepository;
 import com.netckracker.content.manager.repository.NodeTypeRepository;
 import com.netckracker.content.manager.repository.TagRepository;
+import com.netckracker.content.manager.repository.VerbRepository;
 import com.netckracker.content.manager.service.NodeServiceImpl;
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -62,6 +65,8 @@ public class NodeTest {
     private NodeTypeRepository nodeTypeRepository;
     @Autowired
     private Hash hash;
+    @Autowired
+    private VerbRepository verbRepository;
     private static final String NAME="tag";
         
     @Test
@@ -91,6 +96,21 @@ public class NodeTest {
         List<TagDto> tags=nodeService.findTagByLetters("tag");
         assertEquals("tag incorrect", "tag1", tags.get(0).getName());
         assertEquals("tag incorrect", "tag2", tags.get(1).getName());
+
+    }
+    
+        @Test
+    public void findVerbs(){
+        
+        Verb verb1=new Verb();
+        Verb verb2=new Verb();
+        verb1.setName("someVerb1");
+        verb2.setName("someVerb2");
+        Verb saved1=verbRepository.save(verb1);
+        Verb saved2=verbRepository.save(verb2);
+        List<VerbDto> verbs=nodeService.findVerbByLetters("some");
+        assertEquals("tag incorrect", "someVerb1", verbs.get(0).getName());
+        assertEquals("tag incorrect", "someVerb2", verbs.get(1).getName());
 
     }
 }

@@ -180,7 +180,7 @@ public class NodeServiceImpl implements NodeService{
     @Override
     public List<NodeDto> findByVerb(String nameVerb,  int page, int size) {
         Verb verb=verbRepository.findByName(nameVerb);
-       List <Node> nodes=nodeRepository.findByVerb(verb.getId(), new PageRequest(page, size)).getContent();
+       List <Node> nodes=nodeRepository.findByVerb(verb.getVerbId(), new PageRequest(page, size)).getContent();
        return nodes.stream()
                .map(node->convertor.convertNodeToDto(node))
                .collect(Collectors.toList());   
@@ -199,7 +199,7 @@ public class NodeServiceImpl implements NodeService{
     @Override
     public List<VerbDto> findVerbByLetters(String letters) {    
         List <Verb> verbs=new ArrayList<>(); 
-        verbs=verbRepository.findFirst10ByNameLike(letters);
+        verbs=verbRepository.findFirst10ByNameContaining(letters);
         return verbs.stream()
                .map(verb->convertor.convertVerbToDto(verb))
                .collect(Collectors.toList());

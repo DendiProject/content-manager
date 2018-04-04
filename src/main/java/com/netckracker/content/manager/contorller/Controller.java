@@ -6,6 +6,7 @@
 package com.netckracker.content.manager.contorller;
 
 import com.netckracker.content.manager.model.NodeDto;
+import com.netckracker.content.manager.model.VerbDto;
 import com.netckracker.content.manager.service.NodeService;
 import io.swagger.annotations.ApiOperation;
 import java.util.List;
@@ -122,6 +123,19 @@ public class Controller {
         }
         else{            
             return new ResponseEntity<>(text, HttpStatus.OK);
+        }  
+    }
+    
+    @ApiOperation("Get verb by first letters")           
+    @RequestMapping(value = "/verb/{letters}", method = RequestMethod.GET, 
+            consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
+    public ResponseEntity<?> getVerbsByLetters(@PathVariable String letters) {
+        List<VerbDto> verbs =nodeService.findVerbByLetters(letters);
+            if (verbs.isEmpty()){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        else{            
+            return new ResponseEntity<>(verbs, HttpStatus.OK);
         }  
     }
     

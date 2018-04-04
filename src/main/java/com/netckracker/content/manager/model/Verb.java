@@ -25,15 +25,6 @@ public class Verb  implements Serializable{
     @Column(name = "verb_name")
     private String name;
        
-    
-    
-    public String getId() {
-        return verbId;
-    }
-
-    public void setId(String id) {
-        this.verbId = verbId;
-    }
     public String getName() {
         return name;
     }
