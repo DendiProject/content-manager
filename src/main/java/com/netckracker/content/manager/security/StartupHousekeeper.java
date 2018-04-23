@@ -58,7 +58,7 @@ public class StartupHousekeeper implements ApplicationListener<ContextRefreshedE
     private boolean start = true;
     
     @Autowired
-    MyTokenStore myTokenStore;
+    SecurityTokenHandler myTokenStore;
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent e) {
