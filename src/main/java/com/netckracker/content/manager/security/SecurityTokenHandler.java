@@ -34,6 +34,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -41,7 +44,9 @@ import org.springframework.http.ResponseEntity;
  *
  * @author ArtemShevelyukhin
  */
+
 @Component
+@Profile("production")
 public class SecurityTokenHandler {
 
   private String token;
@@ -112,7 +117,7 @@ public class SecurityTokenHandler {
     }
   }
 
-  public int verifySecureToken(String service, String secureToken) {
+  public int verifySecureToken(String secureToken) {
     int res = 0;
     try {
       URL url = new URL(
@@ -120,7 +125,6 @@ public class SecurityTokenHandler {
       HttpURLConnection con = (HttpURLConnection) url.openConnection();
       con.setRequestMethod("POST");
       con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
-      con.setRequestProperty("service", service);
       con.setRequestProperty("secureToken", secureToken);
       con.setDoOutput(true);
 

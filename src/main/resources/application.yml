@@ -4,6 +4,8 @@ security:
 server:
   port: 8085
 spring:
+  profiles:
+    active: production
   jpa:    
     show-sql: true
     hibernate:
@@ -25,6 +27,3 @@ http:
     multipart:
     max-file-size: 5MB
     max-request-size: 5MB
-service:
-  id: contentmanager
-  secret: cmpass

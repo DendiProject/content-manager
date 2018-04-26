@@ -65,26 +65,22 @@ public class FileController {
           @RequestHeader("service") String service,
           @RequestHeader("secureToken") String secureToken) throws IOException {
 
-    if (tokenHandler.verifySecureToken(service, secureToken) == 200) {
-      if (!file.isEmpty()) {
-        InputStream is = new BufferedInputStream(file.getInputStream());
-        byte[] array = new byte[is.available()];
-        is.read(array, 0, is.available());
-        is.close();
-        Path tmp = Files.createTempFile(nodeId, null);
-        Files.write(tmp, array);
-        Node node = nodeRepository.findById(nodeId);
-        node.setNodeSource(tmp.toString());
-        Map<String, byte[]> newFile = new HashMap<>();
-        newFile.put("content", array);
-        newFile.put("nodeId", nodeId.getBytes());
-        rabbitTemplate.convertAndSend(newFile);
-      }
-       System.out.println("**Картинка добавлена**");
-      return new ResponseEntity<>(HttpStatus.OK);
-    } else {
-      return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+    if (!file.isEmpty()) {
+      InputStream is = new BufferedInputStream(file.getInputStream());
+      byte[] array = new byte[is.available()];
+      is.read(array, 0, is.available());
+      is.close();
+      Path tmp = Files.createTempFile(nodeId, null);
+      Files.write(tmp, array);
+      Node node = nodeRepository.findById(nodeId);
+      node.setNodeSource(tmp.toString());
+      Map<String, byte[]> newFile = new HashMap<>();
+      newFile.put("content", array);
+      newFile.put("nodeId", nodeId.getBytes());
+      rabbitTemplate.convertAndSend(newFile);
     }
+    System.out.println("**Картинка добавлена**");
+    return new ResponseEntity<>(HttpStatus.OK);
   }
 
   @ApiOperation("Get file by Id")

@@ -12,6 +12,7 @@ import com.netckracker.content.manager.model.Verb;
 import com.netckracker.content.manager.repository.NodeRepository;
 import com.netckracker.content.manager.repository.NodeTypeRepository;
 import com.netckracker.content.manager.repository.VerbRepository;
+import com.netckracker.content.manager.security.SecurityTokenHandler;
 import com.netckracker.content.manager.service.NodeService;
 import com.netckracker.content.manager.service.StorageService;
 import java.io.File;
@@ -46,6 +47,13 @@ import java.util.Arrays;
 import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.*;
 import org.skyscreamer.jsonassert.JSONAssert;
+import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.context.annotation.Bean;
+
+
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MvcResult;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -54,8 +62,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  *
  * @author eliza
  */
+
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest
+@ActiveProfiles("test")
 @WebAppConfiguration
 public class ControllerTest {
     private MockMvc mockMvc;
@@ -69,12 +79,15 @@ public class ControllerTest {
     private VerbRepository verbRepository;
     @Autowired
     private WebApplicationContext wac;
+    
 
     @Before
     public void setUp() {
-        mockMvc = webAppContextSetup(wac).build();
-
+        mockMvc = webAppContextSetup(wac).build(); 
     }
+    
+    
+            
     @Test
     public void addingTagTest() throws Exception
     {
