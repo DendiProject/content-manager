@@ -8,7 +8,6 @@ package com.netckracker.content.manager;
 
 
 import com.netckracker.content.manager.model.NodeDto;
-import com.netckracker.content.manager.security.SecurityTokenHandler;
 import com.netckracker.content.manager.service.FileSystemStorageService;
 import com.netckracker.content.manager.service.NodeService;
 import com.netckracker.content.manager.service.StorageService;
@@ -25,7 +24,6 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
@@ -43,7 +41,6 @@ import org.springframework.web.context.WebApplicationContext;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest
 @WebAppConfiguration
-@ActiveProfiles("test")
 public class FileControllerTest {
     private MockMvc mockMvc;
     @Autowired
@@ -52,7 +49,7 @@ public class FileControllerTest {
     private FileSystemStorageService storageService;
     @Autowired
     private WebApplicationContext wac;
- 
+    
     @Before
     public void setUp() throws Exception {
         mockMvc = webAppContextSetup(wac).build();

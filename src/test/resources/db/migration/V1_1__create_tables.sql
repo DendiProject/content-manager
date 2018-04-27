@@ -2,7 +2,6 @@ CREATE TABLE nodetype
 (
     type_id character varying(255)  NOT NULL,
     type_name character varying(255),
-    max_size  integer,
     CONSTRAINT nodetype_pkey PRIMARY KEY (type_id)
 );
 

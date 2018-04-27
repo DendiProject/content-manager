@@ -47,12 +47,14 @@ import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.InMemoryTokenStore;
 import java.util.Base64;
+import org.springframework.context.annotation.Profile;
 
 /**
  *
  * @author ArtemShevelyukhin
  */
 @Component
+@Profile("production")
 public class StartupHousekeeper implements ApplicationListener<ContextRefreshedEvent> {
 
     private boolean start = true;

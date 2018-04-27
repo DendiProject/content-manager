@@ -8,7 +8,6 @@ package com.netckracker.content.manager.contorller;
 import com.netckracker.content.manager.model.Node;
 import com.netckracker.content.manager.model.NodeDto;
 import com.netckracker.content.manager.repository.NodeRepository;
-import com.netckracker.content.manager.security.SecurityTokenHandler;
 import com.netckracker.content.manager.service.NodeServiceImpl;
 import com.netckracker.content.manager.service.StorageService;
 import io.swagger.annotations.ApiOperation;
@@ -33,7 +32,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -45,58 +43,53 @@ import org.springframework.web.multipart.MultipartFile;
  * @author eliza
  */
 @RestController
-public class FileController {
-
-  @Autowired
-  private NodeRepository nodeRepository;
-  @Autowired
-  private StorageService storageService;
-  @Autowired
-  private RabbitTemplate rabbitTemplate;
-  @Autowired
-  private SecurityTokenHandler tokenHandler;
-
-  @ApiOperation("Add file by Id")
-  @RequestMapping(value = "/file/addfile/{nodeId}", method = RequestMethod.POST)
-  public ResponseEntity<Void> addFile(
-          @RequestParam MultipartFile file,
-          @PathVariable String nodeId,
-          @RequestHeader("userCookie") String userCookie,
-          @RequestHeader("service") String service,
-          @RequestHeader("secureToken") String secureToken) throws IOException {
-
-    if (!file.isEmpty()) {
-      InputStream is = new BufferedInputStream(file.getInputStream());
-      byte[] array = new byte[is.available()];
-      is.read(array, 0, is.available());
-      is.close();
-      Path tmp = Files.createTempFile(nodeId, null);
-      Files.write(tmp, array);
-      Node node = nodeRepository.findById(nodeId);
-      node.setNodeSource(tmp.toString());
-      Map<String, byte[]> newFile = new HashMap<>();
-      newFile.put("content", array);
-      newFile.put("nodeId", nodeId.getBytes());
-      rabbitTemplate.convertAndSend(newFile);
+public class FileController { 
+    @Autowired
+    private NodeRepository nodeRepository; 
+    @Autowired
+    private StorageService storageService; 
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
+    
+    @ApiOperation("Add file by Id")
+    @RequestMapping(value = "/file/addfile/{nodeId}", method = RequestMethod.POST)             
+    public ResponseEntity<Void> addFile(@RequestParam MultipartFile file,@PathVariable String nodeId) throws IOException{
+       
+         if (!file.isEmpty())
+        {
+            InputStream is =  new BufferedInputStream(file.getInputStream());
+            byte[] array=new byte[is.available()];
+            is.read(array, 0, is.available());
+            is.close();
+            Path tmp=Files.createTempFile(nodeId, null);
+            Files.write(tmp, array);
+            Node node=nodeRepository.findById(nodeId);
+            node.setNodeSource(tmp.toString());
+            Map<String, byte[]> newFile = new HashMap<>();
+            newFile.put("content", array);
+            newFile.put("nodeId", nodeId.getBytes());
+            rabbitTemplate.convertAndSend(newFile);
+        }
+           
+        return new ResponseEntity<>(HttpStatus.OK);
     }
-    System.out.println("**Картинка добавлена**");
-    return new ResponseEntity<>(HttpStatus.OK);
-  }
-
-  @ApiOperation("Get file by Id")
-  @RequestMapping(value = "/file/getfile/{nodeId}", method = RequestMethod.GET)
-  public ResponseEntity<byte[]> getNode(@PathVariable String nodeId) throws IOException {
-    byte[] content = null;
-    String type = nodeRepository.findById(nodeId).getNodeType().getName();
-    content = storageService.load(nodeId);
-
-    if (content == null) {
-      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    } else {
-      HttpHeaders responseHeaders = new HttpHeaders();
-      responseHeaders.set("Content-Type", type);
-      return new ResponseEntity<byte[]>(content, responseHeaders, HttpStatus.OK);
+    
+    @ApiOperation("Get file by Id")
+    @RequestMapping(value = "/file/getfile/{nodeId}", method = RequestMethod.GET)
+    public ResponseEntity<byte[]> getNode(@PathVariable String nodeId) throws IOException {
+        byte[] content=null;
+        String type =nodeRepository.findById(nodeId).getNodeType().getName();
+        content=storageService.load(nodeId);
+        
+        if (content == null){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        else{            
+            HttpHeaders responseHeaders = new HttpHeaders();
+            responseHeaders.set("Content-Type", type);            
+            return new ResponseEntity<byte[]>(content, responseHeaders, HttpStatus.OK);
+            }
     }
-  }
+        
 
 }

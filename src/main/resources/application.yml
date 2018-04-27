@@ -1,11 +1,6 @@
-security:
-  basic:
-    enabled: false
 server:
-  port: 8085
+  port: 8082
 spring:
-  profiles:
-    active: production
   jpa:    
     show-sql: true
     hibernate:
@@ -14,9 +9,9 @@ spring:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
 spring.datasource: 
   type: com.zaxxer.hikari.HikariDataSource
-  url: jdbc:postgresql://localhost:5433/resources
+  url: jdbc:postgresql://localhost:5432/Resources
   username: postgres
-  password: admin
+  password: 1234
   testWhileIdle: true
   validationQuery: SELECT 1
 flyway:

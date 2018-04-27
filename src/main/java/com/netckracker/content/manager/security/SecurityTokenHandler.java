@@ -71,51 +71,51 @@ public class SecurityTokenHandler {
     return token;
   }
 
-  public void updateAccessToken() {
-    try {
-      String client = clientId + ":" + clientSecret;
-      byte[] encodedBytes = Base64.getEncoder().encode(client.getBytes());
-      String str = new String(encodedBytes, StandardCharsets.UTF_8);
-      String encoded = "Basic " + str;
-
-      HttpClient httpclient = HttpClients.createDefault();
-      HttpPost httppost = new HttpPost("http://localhost:8182/oauth/token");
-
-      httppost.addHeader("Content-Type", "application/x-www-form-urlencoded");
-      httppost.addHeader("Authorization", encoded);
-      httppost.addHeader("Cache-Control", "no-cache");
-
-      List<NameValuePair> params = new ArrayList<NameValuePair>();
-      params.add(new BasicNameValuePair("grant_type", "client_credentials"));
-      params.add(new BasicNameValuePair("scope", "read"));
-      httppost.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
-      HttpResponse response = httpclient.execute(httppost);
-      HttpEntity entity = response.getEntity();
-
-      if (entity != null) {
-
-        InputStream instream = entity.getContent();
-        try {
-
-          Gson gson = new Gson();
-          String responseString = EntityUtils.toString(entity, "UTF-8");
-          JSONObject jsonObj = new JSONObject(responseString);
-
-          tokenHandler.setToken(jsonObj.get("access_token").toString());
-
-          System.out.println("UpdatedToken =  " + tokenHandler.getToken());
-
-        } finally {
-          instream.close();
-        }
-      }
-
-    } catch (UnsupportedEncodingException ex) {
-      Logger.getLogger(StartupHousekeeper.class.getName()).log(Level.SEVERE, null, ex);
-    } catch (IOException ex) {
-      Logger.getLogger(StartupHousekeeper.class.getName()).log(Level.SEVERE, null, ex);
-    }
-  }
+//  public void updateAccessToken() {
+//    try {
+//      String client = clientId + ":" + clientSecret;
+//      byte[] encodedBytes = Base64.getEncoder().encode(client.getBytes());
+//      String str = new String(encodedBytes, StandardCharsets.UTF_8);
+//      String encoded = "Basic " + str;
+//
+//      HttpClient httpclient = HttpClients.createDefault();
+//      HttpPost httppost = new HttpPost("http://localhost:8182/oauth/token");
+//
+//      httppost.addHeader("Content-Type", "application/x-www-form-urlencoded");
+//      httppost.addHeader("Authorization", encoded);
+//      httppost.addHeader("Cache-Control", "no-cache");
+//
+//      List<NameValuePair> params = new ArrayList<NameValuePair>();
+//      params.add(new BasicNameValuePair("grant_type", "client_credentials"));
+//      params.add(new BasicNameValuePair("scope", "read"));
+//      httppost.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
+//      HttpResponse response = httpclient.execute(httppost);
+//      HttpEntity entity = response.getEntity();
+//
+//      if (entity != null) {
+//
+//        InputStream instream = entity.getContent();
+//        try {
+//
+//          Gson gson = new Gson();
+//          String responseString = EntityUtils.toString(entity, "UTF-8");
+//          JSONObject jsonObj = new JSONObject(responseString);
+//
+//          tokenHandler.setToken(jsonObj.get("access_token").toString());
+//
+//          System.out.println("UpdatedToken =  " + tokenHandler.getToken());
+//
+//        } finally {
+//          instream.close();
+//        }
+//      }
+//
+//    } catch (UnsupportedEncodingException ex) {
+//      Logger.getLogger(StartupHousekeeper.class.getName()).log(Level.SEVERE, null, ex);
+//    } catch (IOException ex) {
+//      Logger.getLogger(StartupHousekeeper.class.getName()).log(Level.SEVERE, null, ex);
+//    }
+// }
 
   public int verifySecureToken(String secureToken) {
     int res = 0;

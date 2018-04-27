@@ -24,17 +24,6 @@ public class NodeType implements Serializable {
 
     @Column(name = "type_name")
     private String name;
-    
-    @Column(name = "max_size")
-    private int maxSize;
-
-    public int getMaxSize() {
-        return maxSize;
-    }
-
-    public void setMaxSize(int maxSize) {
-        this.maxSize = maxSize;
-    }
 
     public String getTypeId() {
         return typeId;

@@ -18,6 +18,6 @@ import org.springframework.stereotype.Repository;
 public interface VerbRepository   extends JpaRepository <Verb, String> {
     Verb findByVerbId(String verbId);
     Verb findByName(String name);
-    List<Verb> findFirst10ByNameContaining(String firstLetters);
+    List<Verb> findFirst10ByNameStartingWith(String firstLetters);
 
 }

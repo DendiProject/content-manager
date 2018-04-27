@@ -199,7 +199,7 @@ public class NodeServiceImpl implements NodeService{
     @Override
     public List<VerbDto> findVerbByLetters(String letters) {    
         List <Verb> verbs=new ArrayList<>(); 
-        verbs=verbRepository.findFirst10ByNameContaining(letters);
+        verbs=verbRepository.findFirst10ByNameStartingWith(letters);
         return verbs.stream()
                .map(verb->convertor.convertVerbToDto(verb))
                .collect(Collectors.toList());
@@ -209,7 +209,7 @@ public class NodeServiceImpl implements NodeService{
     @Override
     public List<TagDto> findTagByLetters(String letters) {
        List <Tag> tags=new ArrayList<>(); 
-        tags=tagRepository.findFirst10ByNameContaining(letters);
+        tags=tagRepository.findFirst10ByNameStartingWith(letters);
         return tags.stream()
                .map(tag->convertor.convertTagToDto(tag))
                .collect(Collectors.toList());
