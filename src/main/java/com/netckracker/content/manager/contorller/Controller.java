@@ -29,7 +29,7 @@ public class Controller {
     
     @Autowired
     private NodeService nodeService;    
-   
+    
     @ApiOperation("Add tag by nodeId")
     @RequestMapping(value = "/tag/addtag/{nodeId}", method = RequestMethod.POST, 
             consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
@@ -117,6 +117,7 @@ public class Controller {
     @ApiOperation("Get node text")
     @RequestMapping(value = "/node/getnodetext/{nodeId}", method = RequestMethod.GET)
     public ResponseEntity<?> getNodeText(@PathVariable String nodeId) {
+      
         String text=nodeService.getNodeText(nodeId);
             if (text.isEmpty()){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

@@ -12,6 +12,7 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +27,7 @@ import org.springframework.stereotype.Component;
  * @author ArtemShevelyukhin
  */
 @Component
-@Profile("production")
+@Profile("prod")
 public class SecurityFilter implements Filter {
   
   @Autowired
@@ -42,22 +43,33 @@ public class SecurityFilter implements Filter {
     HttpServletRequest request = (HttpServletRequest) servletRequest;
     HttpServletResponse response = (HttpServletResponse) servletResponse;
     
-     
+    System.out.println("RequestURL = " + request.getRequestURL());
+    
     String secureToken = request.getHeader("secureToken");
     String userCookie = request.getHeader("userCookie");
     String service = request.getHeader("service");
     System.out.println("secureToken = " + secureToken);
+    System.out.println("          ");
+    System.out.println("************************************************************************");
+    System.out.println("          ");
     
-    fc.doFilter(servletRequest, servletResponse);
     
     int secureResponse = tokenHandler.verifySecureToken(secureToken);
+    if(secureToken != null){
     switch (secureResponse){
       case 200:
+        System.out.println("OK !!!");
         break;
       case 401:
         response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
         break;
     }
+    fc.doFilter(servletRequest, servletResponse);
+    } else {
+      response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+    }
+    
+     
   }
 
   @Override

@@ -46,7 +46,7 @@ import org.springframework.http.ResponseEntity;
  */
 
 @Component
-@Profile("production")
+@Profile("prod")
 public class SecurityTokenHandler {
 
   private String token;
@@ -55,6 +55,8 @@ public class SecurityTokenHandler {
   String clientId;
   @Value("${service.secret}")
   String clientSecret;
+  @Value("${idp.url}")
+  String idpURL;
   
   @Autowired
   SecurityTokenHandler tokenHandler;
@@ -79,7 +81,7 @@ public class SecurityTokenHandler {
 //      String encoded = "Basic " + str;
 //
 //      HttpClient httpclient = HttpClients.createDefault();
-//      HttpPost httppost = new HttpPost("http://localhost:8182/oauth/token");
+//      HttpPost httppost = new HttpPost("http://"+idpURL+"/oauth/token");
 //
 //      httppost.addHeader("Content-Type", "application/x-www-form-urlencoded");
 //      httppost.addHeader("Authorization", encoded);
@@ -121,7 +123,7 @@ public class SecurityTokenHandler {
     int res = 0;
     try {
       URL url = new URL(
-              "http://localhost:8182/idpsecure/verifyToken" + "?access_token=" + tokenHandler.getToken());
+              "http://"+idpURL+"/idpsecure/verifyToken" + "?access_token=" + tokenHandler.getToken());
       HttpURLConnection con = (HttpURLConnection) url.openConnection();
       con.setRequestMethod("POST");
       con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");

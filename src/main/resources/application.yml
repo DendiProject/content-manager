@@ -1,3 +1,6 @@
+security:
+  basic:
+    enabled: false
 server:
   port: 8082
 spring:
@@ -9,9 +12,9 @@ spring:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
 spring.datasource: 
   type: com.zaxxer.hikari.HikariDataSource
-  url: jdbc:postgresql://localhost:5432/Resources
+  url: jdbc:postgresql://localhost:5433/resources
   username: postgres
-  password: 1234
+  password: admin
   testWhileIdle: true
   validationQuery: SELECT 1
 flyway:
@@ -22,3 +25,8 @@ http:
     multipart:
     max-file-size: 5MB
     max-request-size: 5MB
+idp:
+  url: localhost:8181
+service:
+  id: cm
+  secret: cmpass

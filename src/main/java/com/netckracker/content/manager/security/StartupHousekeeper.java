@@ -54,9 +54,12 @@ import org.springframework.context.annotation.Profile;
  * @author ArtemShevelyukhin
  */
 @Component
-@Profile("production")
+@Profile("prod")
 public class StartupHousekeeper implements ApplicationListener<ContextRefreshedEvent> {
-
+  
+  @Value("${idp.url}")
+  String idpURL;
+  
     private boolean start = true;
     
     @Autowired
@@ -66,7 +69,7 @@ public class StartupHousekeeper implements ApplicationListener<ContextRefreshedE
     public void onApplicationEvent(ContextRefreshedEvent e) {
         if (start){   
         try {
-            String client_id = "contentmanager";
+            String client_id = "cm";
             String client_secret = "cmpass";
             String client  = client_id + ":" + client_secret;
             byte[] encodedBytes = Base64.getEncoder().encode(client.getBytes());   
@@ -74,7 +77,7 @@ public class StartupHousekeeper implements ApplicationListener<ContextRefreshedE
             String encoded = "Basic " + str ;
                        
             HttpClient httpclient = HttpClients.createDefault();
-            HttpPost httppost = new HttpPost("http://localhost:8182/oauth/token");
+            HttpPost httppost = new HttpPost("http://"+idpURL+"/oauth/token");
             
             
             httppost.addHeader("Content-Type", "application/x-www-form-urlencoded");
