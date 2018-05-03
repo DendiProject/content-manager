@@ -54,7 +54,7 @@ import org.springframework.context.annotation.Profile;
  * @author ArtemShevelyukhin
  */
 @Component
-@Profile("prod")
+//@Profile("prod")
 public class StartupHousekeeper implements ApplicationListener<ContextRefreshedEvent> {
   
   @Value("${idp.url}")

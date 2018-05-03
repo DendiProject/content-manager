@@ -46,7 +46,7 @@ import org.springframework.http.ResponseEntity;
  */
 
 @Component
-@Profile("prod")
+//@Profile("prod")
 public class SecurityTokenHandler {
 
   private String token;
@@ -121,6 +121,7 @@ public class SecurityTokenHandler {
 
   public int verifySecureToken(String secureToken) {
     int res = 0;
+    if (secureToken != null){
     try {
       URL url = new URL(
               "http://"+idpURL+"/idpsecure/verifyToken" + "?access_token=" + tokenHandler.getToken());
@@ -131,13 +132,15 @@ public class SecurityTokenHandler {
       con.setDoOutput(true);
 
       int responseCode = con.getResponseCode();
-      System.out.println("responseCode =  " + responseCode);
+      System.out.println(" verifySecureToken responseCode =  " + responseCode);
       res = con.getResponseCode();
-
+    
     } catch (MalformedURLException ex) {
       Logger.getLogger(SecurityTokenHandler.class.getName()).log(Level.SEVERE, null, ex);
     } catch (IOException ex) {
       Logger.getLogger(SecurityTokenHandler.class.getName()).log(Level.SEVERE, null, ex);
+    } } else {
+      res = 401;
     }
     return res;
   }
