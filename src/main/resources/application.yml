@@ -10,9 +10,11 @@ spring:
       ddl-auto: none
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+postgres.url:
+   5433
 spring.datasource: 
   type: com.zaxxer.hikari.HikariDataSource
-  url: jdbc:postgresql://localhost:5433/resources
+  url: jdbc:postgresql://localhost:${postgres.url}/resources
   username: postgres
   password: admin
   testWhileIdle: true
