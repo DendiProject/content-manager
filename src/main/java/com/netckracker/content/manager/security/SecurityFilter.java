@@ -50,11 +50,7 @@ public class SecurityFilter implements Filter {
     String service = request.getHeader("service");
     System.out.println("secureToken = " + secureToken);
 
-    // Костыль убрать потом
-    Pattern pa = Pattern.compile("abc[a-z]+");
-    Matcher ma = pa.matcher("abcdk");
-    boolean qa = ma.matches();
-    
+    // Проверка для загрузки картинок нод
     Pattern p = Pattern.compile("http://localhost:8082//file/getfile/.+");
     Matcher m = p.matcher(request.getRequestURL());
     boolean q = m.matches();
