@@ -28,7 +28,7 @@ import org.springframework.stereotype.Component;
  * @author ArtemShevelyukhin
  */
 @Component
-//@Profile("prod")
+@Profile("prod")
 public class SecurityFilter implements Filter {
 
   @Autowired

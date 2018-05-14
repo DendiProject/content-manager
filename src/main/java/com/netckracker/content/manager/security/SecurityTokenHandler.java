@@ -46,7 +46,7 @@ import org.springframework.http.ResponseEntity;
  */
 
 @Component
-//@Profile("prod")
+@Profile("prod")
 public class SecurityTokenHandler {
 
   private String token;
